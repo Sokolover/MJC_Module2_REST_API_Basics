@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS tag;
+
+CREATE TABLE IF NOT EXISTS tag
+(
+    id   BIGINT(100)  NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO tag (id, name) VALUES (1, 'first');
