@@ -12,6 +12,14 @@ public class Tag {
         this.name = name;
     }
 
+    public Tag(String name) {
+        this.name = name;
+    }
+
+    public Tag() {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,5 +48,13 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

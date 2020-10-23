@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface TagRepo {
 
-    void createTag(Tag tag);
+    Long createTag(Tag tag);
 
     void deleteTag(Tag tag);
 

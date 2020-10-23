@@ -16,8 +16,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void createTag(Tag tag) {
-        tagRepo.createTag(tag);
+    public Long createTag(Tag tag) {
+        return tagRepo.createTag(tag);
     }
 
     @Override

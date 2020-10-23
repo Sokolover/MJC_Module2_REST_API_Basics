@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public interface TagService {
 
-    void createTag(Tag tag);
+    Long createTag(Tag tag);
 
     void deleteTag(Tag tag);
 

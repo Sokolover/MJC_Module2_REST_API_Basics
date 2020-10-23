@@ -2,6 +2,8 @@ package com.epam.esm.sokolov.repository.tag;
 
 import com.epam.esm.sokolov.model.Tag;
 import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -13,7 +15,10 @@ import java.util.Map;
 @Repository
 public class TagRepoImpl implements TagRepo {
 
-    private static final String INSERT_TAG = "insert into tag (name) values (:name)";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+
+    private static final String INSERT_TAG = "insert into tag (name) value (:tagname)";
     private static final String SELECT_TAG_BY_ID = "select * from tag where id = ?";
     private static final String UPDATE_TAG = "update tag set name = ? where id = ?";
     private static final String DELETE_TAG = "delete from tag where id = ?";
@@ -27,14 +32,21 @@ public class TagRepoImpl implements TagRepo {
 
     private Tag mapTag(ResultSet resultSet, int row) throws SQLException {
         return new Tag(
-                resultSet.getLong("id"),
-                resultSet.getString("name"));
+                resultSet.getLong(ID),
+                resultSet.getString(NAME));
     }
 
-    public void createTag(Tag tag) {
+    public Long createTag(Tag tag) {
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("name", tag.getName());
-        jdbcOperations.update(INSERT_TAG, paramMap);
+
+//        paramMap.put("tagname", tag.getName());
+//        jdbcOperations.update(INSERT_TAG, paramMap, keyHolder);
+//        return (long) keyHolder.getKey();
+
+        jdbcOperations.update(INSERT_TAG, tag.getName());
+        return 1L;
     }
 
     public void deleteTag(Tag tag) {
@@ -43,8 +55,8 @@ public class TagRepoImpl implements TagRepo {
 
     public void updateTag(Tag tag) {
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("id", tag.getId());
-        paramMap.put("name", tag.getName());
+        paramMap.put(ID, tag.getId());
+        paramMap.put(NAME, tag.getName());
         jdbcOperations.update(UPDATE_TAG, paramMap);
     }
 
