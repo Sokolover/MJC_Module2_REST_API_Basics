@@ -16,18 +16,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public void createGiftCertificate(GiftCertificate giftCertificate) {
-        giftCertificateRepo.createGiftCertificate(giftCertificate);
+    public Long create(GiftCertificate giftCertificate) {
+        return giftCertificateRepo.create(giftCertificate);
     }
 
     @Override
-    public void deleteGiftCertificate(GiftCertificate giftCertificate) {
-        giftCertificateRepo.deleteGiftCertificate(giftCertificate);
+    public void delete(GiftCertificate giftCertificate) {
+        giftCertificateRepo.delete(giftCertificate);
     }
 
     @Override
-    public void updateGiftCertificate(GiftCertificate giftCertificate) {
-        giftCertificateRepo.updateGiftCertificate(giftCertificate);
+    public void update(GiftCertificate giftCertificate) {
+        giftCertificateRepo.update(giftCertificate);
     }
 
     @Override

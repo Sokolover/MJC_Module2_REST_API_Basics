@@ -1,8 +1,10 @@
 package com.epam.esm.sokolov.model;
 
+import com.epam.esm.sokolov.core.IdentifiedRow;
+
 import java.util.Objects;
 
-public class Tag {
+public class Tag implements IdentifiedRow {
 
     private Long id;
     private String name;

@@ -8,11 +8,11 @@ import java.util.List;
 @Repository
 public interface TagRepo {
 
-    Long createTag(Tag tag);
+    Long create(Tag entity);
 
-    void deleteTag(Tag tag);
+    void delete(Tag entity);
 
-    void updateTag(Tag tag);
+    void update(Tag entity);
 
     Tag findById(long id);
 

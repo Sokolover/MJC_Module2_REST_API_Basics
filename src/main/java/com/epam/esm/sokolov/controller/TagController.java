@@ -18,21 +18,26 @@ public class TagController {
 
     @GetMapping
     public List<Tag> findAll() {
-
         return tagService.findAll();
     }
 
     @GetMapping("/{id}")
     public Tag findById(@PathVariable Long id) {
-
         return tagService.findById(id);
     }
 
     @PostMapping
     public void createTag(@RequestBody Tag tag) {
+        tagService.create(tag);
+    }
 
-        Long newId = tagService.createTag(tag);
-        tag.setId(newId);
-        System.out.println(tag.toString());
+    @DeleteMapping("/delete")
+    public void deleteTag(@RequestBody Tag tag) {
+        tagService.delete(tag);
+    }
+
+    @PutMapping("/update")
+    public void updateTag(@RequestBody Tag tag) {
+        tagService.update(tag);
     }
 }

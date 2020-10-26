@@ -8,11 +8,11 @@ import java.util.List;
 @Repository
 public interface GiftCertificateRepo {
 
-    void createGiftCertificate(GiftCertificate giftCertificate);
+    Long create(GiftCertificate entity);
 
-    void deleteGiftCertificate(GiftCertificate giftCertificate);
+    void delete(GiftCertificate entity);
 
-    void updateGiftCertificate(GiftCertificate giftCertificate);
+    void update(GiftCertificate entity);
 
     GiftCertificate findById(long id);
 

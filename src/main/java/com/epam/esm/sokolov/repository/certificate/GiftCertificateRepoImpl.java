@@ -1,18 +1,19 @@
 package com.epam.esm.sokolov.repository.certificate;
 
+import com.epam.esm.sokolov.core.AbstractGenericRepo;
 import com.epam.esm.sokolov.model.GiftCertificate;
-import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
-public class GiftCertificateRepoImpl implements GiftCertificateRepo {
+public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate> implements GiftCertificateRepo {
 
     private static final String ID = "id";
     private static final String NAME = "name";
@@ -22,22 +23,22 @@ public class GiftCertificateRepoImpl implements GiftCertificateRepo {
     private static final String LAST_UPDATE_DATE = "lastUpdateDate";
     private static final String DURATION = "duration";
 
-    private static final String INSERT_CERTIFICATE = "insert into gift_certificate (name, description, price, createDate, lastUpdateDate, duration) " +
+    private static final String INSERT = "insert into gift_certificate (name, description, price, createDate, lastUpdateDate, duration) " +
             "values (:name, :description, :price, :createDate, :lastUpdateDate, :duration)";
-    private static final String SELECT_CERTIFICATE_BY_ID = "select * from gift_certificate where id = ?";
-    private static final String UPDATE_CERTIFICATE = "update gift_certificate " +
-            "set name = ?, description = ?, price = ?, createDate = ?, lastUpdateDate = ?, duration = ? " +
-            "where id = ?";
-    private static final String DELETE_CERTIFICATE = "delete from gift_certificate where id = ?";
-    private static final String SELECT_ALL_CERTIFICATES = "SELECT * FROM gift_certificate";
+    private static final String SELECT_BY_ID = "select * from gift_certificate where id = :id";
+    private static final String UPDATE = "update gift_certificate " +
+            "set name = :name, description = :description, price = :price, createDate = :createDate, lastUpdateDate = :lastUpdateDate, duration = :duration " +
+            "where id = :id";
+    private static final String DELETE = "delete from gift_certificate where id = :id";
+    private static final String SELECT_ALL = "SELECT * FROM gift_certificate";
 
-    private JdbcOperations jdbcOperations;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public GiftCertificateRepoImpl(JdbcOperations jdbcOperations) {
-        this.jdbcOperations = jdbcOperations;
+    public GiftCertificateRepoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
 
-    private GiftCertificate mapGiftCertificate(ResultSet resultSet, int row) throws SQLException {
+    public GiftCertificate mapEntity(ResultSet resultSet, int row) throws SQLException {
         return new GiftCertificate(
                 resultSet.getLong(ID),
                 resultSet.getString(NAME),
@@ -49,41 +50,50 @@ public class GiftCertificateRepoImpl implements GiftCertificateRepo {
         );
     }
 
-    public void createGiftCertificate(GiftCertificate giftCertificate) {
-        Map<String, Object> paramMap = createAllParamMap(giftCertificate);
-        jdbcOperations.update(INSERT_CERTIFICATE, paramMap);
+    public Long create(GiftCertificate giftCertificate) {
+        return super.create(giftCertificate, INSERT);
     }
 
-    private Map<String, Object> createAllParamMap(GiftCertificate giftCertificate) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put(NAME, giftCertificate.getName());
-        paramMap.put(DESCRIPTION, giftCertificate.getDescription());
-        paramMap.put(PRICE, giftCertificate.getPrice());
-        paramMap.put(CREATE_DATE, giftCertificate.getCreateDate());
-        paramMap.put(LAST_UPDATE_DATE, giftCertificate.getLastUpdateDate());
-        paramMap.put(DURATION, giftCertificate.getDuration());
+    public MapSqlParameterSource createAllParamMapWithoutId(GiftCertificate giftCertificate) {
+        MapSqlParameterSource paramMap = new MapSqlParameterSource();
+        paramMap.addValue(NAME, giftCertificate.getName());
+        paramMap.addValue(DESCRIPTION, giftCertificate.getDescription());
+        paramMap.addValue(PRICE, giftCertificate.getPrice());
+        paramMap.addValue(CREATE_DATE, giftCertificate.getCreateDate());
+        paramMap.addValue(LAST_UPDATE_DATE, giftCertificate.getLastUpdateDate());
+        paramMap.addValue(DURATION, giftCertificate.getDuration());
         return paramMap;
     }
 
-    public void deleteGiftCertificate(GiftCertificate giftCertificate) {
-        jdbcOperations.update(DELETE_CERTIFICATE, giftCertificate.getId());
+    public MapSqlParameterSource createAllParamMap(GiftCertificate giftCertificate) {
+        MapSqlParameterSource paramMap = createAllParamMapWithoutId(giftCertificate);
+        paramMap.addValue(ID, giftCertificate.getId());
+        return paramMap;
     }
 
-    public void updateGiftCertificate(GiftCertificate giftCertificate) {
-        Map<String, Object> paramMap = createAllParamMap(giftCertificate);
-        jdbcOperations.update(UPDATE_CERTIFICATE, paramMap);
+    public void delete(GiftCertificate giftCertificate) {
+        super.delete(giftCertificate, DELETE);
+    }
+
+    public MapSqlParameterSource createIdParamMap(Long id) {
+        MapSqlParameterSource paramMap = new MapSqlParameterSource();
+        paramMap.addValue(ID, id);
+        return paramMap;
+    }
+
+    public void update(GiftCertificate giftCertificate) {
+        super.update(giftCertificate, UPDATE);
     }
 
     public GiftCertificate findById(long id) {
-        return jdbcOperations.queryForObject(
-                SELECT_CERTIFICATE_BY_ID,
-                this::mapGiftCertificate,
-                id);
+        try {
+            return super.findById(id, SELECT_BY_ID);
+        } catch (DataAccessException e) {
+            return new GiftCertificate();
+        }
     }
 
     public List<GiftCertificate> findAll() {
-        return jdbcOperations.query(
-                SELECT_ALL_CERTIFICATES, this::mapGiftCertificate
-        );
+        return super.findAll(SELECT_ALL);
     }
 }

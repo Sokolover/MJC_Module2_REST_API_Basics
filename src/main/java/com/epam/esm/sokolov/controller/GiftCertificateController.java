@@ -18,22 +18,28 @@ public class GiftCertificateController {
 
     @GetMapping
     public List<GiftCertificate> findAll() {
-
         return giftCertificateService.findAll();
     }
 
     @GetMapping("/{id}")
     public GiftCertificate findById(@PathVariable Long id) {
-
         return giftCertificateService.findById(id);
     }
 
-//        "createDate":"2020-10-23T12:37:39",
-//        "lastUpdateDate":"2020-10-23T15:37:39",
+    //        "createDate":"2020-10-23T12:37:39",
+    //        "lastUpdateDate":"2020-10-23T15:37:39",
     @PostMapping
-    public void createTag(@RequestBody GiftCertificate giftCertificate) {
+    public void create(@RequestBody GiftCertificate giftCertificate) {
+        giftCertificateService.create(giftCertificate);
+    }
 
-        giftCertificateService.createGiftCertificate(giftCertificate);
-        System.out.println("done");
+    @PutMapping("/update")
+    public void update(@RequestBody GiftCertificate giftCertificate) {
+        giftCertificateService.update(giftCertificate);
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(@RequestBody GiftCertificate giftCertificate) {
+        giftCertificateService.delete(giftCertificate);
     }
 }
