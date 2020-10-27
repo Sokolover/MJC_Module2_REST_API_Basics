@@ -9,11 +9,13 @@ ext {
     mockitoVersion = '3.5.15'
     jUnitVersion = '4.12'
     jupiterVersion = '5.7.0'
+    dbcpVersion = '2.8.0'
 }
 
 dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: mySqlVersion
     testCompile group: 'com.h2database', name: 'h2', version: h2databaseVersion
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: dbcpVersion
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
