@@ -1,18 +1,16 @@
 package com.epam.esm.sokolov.repository.tag;
 
 import com.epam.esm.sokolov.config.DatabaseTestConfig;
-import com.epam.esm.sokolov.config.SpringJdbcConfig;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepo;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,31 +20,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration(
-//        classes = {SpringJdbcConfig.class, WebConfig.class, GiftCertificateWebApplicationInitializer.class},
-//        loader = AnnotationConfigContextLoader.class)
-//@SpringJUnitConfig(classes = {SpringJdbcConfig.class, DatabaseTestConfig.class})
-@SpringJUnitConfig(classes = {SpringJdbcConfig.class})
-//@WebAppConfiguration
+@SpringJUnitConfig(classes = {DatabaseTestConfig.class})
+@ActiveProfiles("test")
 class TagRepoImplTest {
 
-    private AnnotationConfigApplicationContext context;
-    @Resource
+    @Autowired
     private TagRepo tagRepo;
-    @Resource
+    @Autowired
     private GiftCertificateRepo giftCertificateRepo;
-    @Resource
+    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        context = new AnnotationConfigApplicationContext();
-        context.register(SpringJdbcConfig.class);
-        context.register(DatabaseTestConfig.class);
-        context.refresh();
-//        countryDao = context.getBean("countryDao", CountryDao.class);
-    }
 
     @Test
     void shouldSaveToCrossTable() {

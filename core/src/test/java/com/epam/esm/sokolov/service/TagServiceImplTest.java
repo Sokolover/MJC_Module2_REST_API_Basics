@@ -33,5 +33,4 @@ class TagServiceImplTest {
         Tag tagService = tagServiceImpl.findById(1L);
         Assertions.assertEquals(tagRepo, tagService);
     }
-
 }

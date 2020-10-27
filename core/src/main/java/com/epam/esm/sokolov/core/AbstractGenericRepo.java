@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,15 +27,19 @@ public abstract class AbstractGenericRepo<T extends IdentifiedRow> implements Ge
             KeyHolder keyHolder = new GeneratedKeyHolder();
             MapSqlParameterSource paramMap = createAllParamMapWithoutId(entity);
             jdbcTemplate.update(createQuery, paramMap, keyHolder);
-            if (keyHolder.getKey() instanceof BigInteger) {//todo test it with mysql!
-                Optional<BigInteger> generatedId = Optional
-                        .of((BigInteger) keyHolder.getKey());
-                return generatedId.map(BigInteger::longValue).orElse(0L);
-            } else {
-                Optional<Long> generatedId = Optional
-                        .of((Long) keyHolder.getKey());
-                return generatedId.orElse(0L);
-            }
+            //todo test it with mysql!
+            return Optional.ofNullable(keyHolder.getKey())
+                    .map(Number::longValue)
+                    .orElse(0L);
+//            if (keyHolder.getKey() instanceof BigInteger) {
+//                Optional<BigInteger> generatedId = Optional
+//                        .of((BigInteger) keyHolder.getKey());
+//                return generatedId.map(BigInteger::longValue).orElse(0L);
+//            } else {
+//                Optional<Long> generatedId = Optional
+//                        .of((Long) keyHolder.getKey());
+//                return generatedId.orElse(0L);
+//            }
         }
     }
 
