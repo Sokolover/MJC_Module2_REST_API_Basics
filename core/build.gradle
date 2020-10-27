@@ -11,6 +11,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     compile group: 'org.springframework', name: 'spring-context', version: '5.2.9.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '5.2.9.RELEASE'

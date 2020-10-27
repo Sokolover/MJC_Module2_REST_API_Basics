@@ -18,4 +18,5 @@ public interface GiftCertificateRepo {
 
     List<GiftCertificate> findAll();
 
+    void setGiftCertificateTags(GiftCertificate giftCertificate);
 }

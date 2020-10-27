@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface GenericRepo<T extends IdentifiedRow> {
 
-    Long create(T entity, String query);
+    Long create(T entity, String createQuery, String updateQuery);
 
     void delete(T entity, String query);
 

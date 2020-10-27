@@ -17,4 +17,6 @@ public interface TagRepo {
     Tag findById(long id);
 
     List<Tag> findAll();
+
+    Tag findByName(Tag entity);
 }

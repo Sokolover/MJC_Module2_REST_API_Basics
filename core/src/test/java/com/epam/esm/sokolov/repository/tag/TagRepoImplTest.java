@@ -1,16 +1,26 @@
 package com.epam.esm.sokolov.repository.tag;
 
+import com.epam.esm.sokolov.config.DatabaseTestConfig;
 import com.epam.esm.sokolov.config.SpringJdbcConfig;
+import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
-import com.epam.esm.sokolov.repository.tag.TagRepo;
+import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepo;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Map;
 
 //@ExtendWith(SpringExtension.class)
 //@ContextConfiguration(
@@ -18,30 +28,63 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 //        loader = AnnotationConfigContextLoader.class)
 //@SpringJUnitConfig(classes = {SpringJdbcConfig.class, DatabaseTestConfig.class})
 @SpringJUnitConfig(classes = {SpringJdbcConfig.class})
-@WebAppConfiguration
+//@WebAppConfiguration
 class TagRepoImplTest {
 
+    private AnnotationConfigApplicationContext context;
     @Resource
     private TagRepo tagRepo;
-//    private AnnotationConfigApplicationContext context;
+    @Resource
+    private GiftCertificateRepo giftCertificateRepo;
+    @Resource
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
-    //    @Test
-//    void shouldCreateTagAndFindItById() {
-//
-//        Tag tagToWrite = new Tag("new tag (4-th)");
-//        tagRepoImpl.createTag(tagToWrite);
-//        Tag tagRead = tagRepoImpl.findById(4L);
-//        Assertions.assertEquals(tagToWrite, tagRead);
-//    }
+    @BeforeEach
+    void setUp() {
+        context = new AnnotationConfigApplicationContext();
+        context.register(SpringJdbcConfig.class);
+        context.register(DatabaseTestConfig.class);
+        context.refresh();
+//        countryDao = context.getBean("countryDao", CountryDao.class);
+    }
 
-//    @Before
-//    public void setUp() {
-//        context = new AnnotationConfigApplicationContext();
-//        context.getEnvironment().setActiveProfiles("dao", "test");
-//        context.register(SpringJdbcConfig.class);
-//        context.refresh();
-//        tagRepoImpl = context.getBean("tagRepoImpl", TagRepoImpl.class);
-//    }
+    @Test
+    void shouldSaveToCrossTable() {
+        GiftCertificate giftCertificate = new GiftCertificate();
+        giftCertificate.setName("netflix3");
+        giftCertificate.setDescription("5 any films");
+        giftCertificate.setPrice(new BigDecimal(4));
+        giftCertificate.setCreateDate(LocalDateTime.parse("2020-10-23T09:37:39"));
+        giftCertificate.setLastUpdateDate(LocalDateTime.parse("2020-10-23T15:37:39"));
+        giftCertificate.setDuration(10);
+        List<Tag> tags = new ArrayList<>();
+        Tag films = new Tag("films");
+        tags.add(films);
+        Tag fun = new Tag("fun");
+        tags.add(fun);
+        giftCertificate.setTags(tags);
+        for (Tag tag : giftCertificate.getTags()) {
+            tag.setId(tagRepo.create(tag));
+        }
+        giftCertificate.setId(giftCertificateRepo.create(giftCertificate));
+        giftCertificateRepo.setGiftCertificateTags(giftCertificate);
+        List crossTable = findAll("select * from tag_has_gift_certificate");
+        System.out.println(crossTable);
+        Assertions.assertEquals(2, crossTable.size());
+    }
+
+    List findAll(String query) {
+        return jdbcTemplate.query(
+                query, this::mapEntity
+        );
+    }
+
+    Map<Long, Long> mapEntity(ResultSet resultSet, int row) throws SQLException {
+        Map<Long, Long> map = new HashMap<>();
+        map.put(resultSet.getLong("tag_id"),
+                resultSet.getLong("gift_certificate_id"));
+        return map;
+    }
 
     @Test
     void shouldFindAll() {

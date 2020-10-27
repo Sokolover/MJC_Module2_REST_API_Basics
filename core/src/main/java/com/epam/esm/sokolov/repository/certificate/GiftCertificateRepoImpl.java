@@ -2,6 +2,7 @@ package com.epam.esm.sokolov.repository.certificate;
 
 import com.epam.esm.sokolov.core.AbstractGenericRepo;
 import com.epam.esm.sokolov.model.GiftCertificate;
+import com.epam.esm.sokolov.model.Tag;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,6 +23,8 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
     private static final String CREATE_DATE = "createDate";
     private static final String LAST_UPDATE_DATE = "lastUpdateDate";
     private static final String DURATION = "duration";
+    private static final String TAG_ID = "tag_id";
+    private static final String GIFT_CERTIFICATE_ID = "gift_certificate_id";
 
     private static final String INSERT = "insert into gift_certificate (name, description, price, createDate, lastUpdateDate, duration) " +
             "values (:name, :description, :price, :createDate, :lastUpdateDate, :duration)";
@@ -31,11 +34,13 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
             "where id = :id";
     private static final String DELETE = "delete from gift_certificate where id = :id";
     private static final String SELECT_ALL = "SELECT * FROM gift_certificate";
+    private static final String INSERT_TAG_TO_GIFT_CERTIFICATE = "INSERT INTO tag_has_gift_certificate (tag_id, gift_certificate_id) VALUES (:tag_id, :gift_certificate_id)";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     public GiftCertificateRepoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public GiftCertificate mapEntity(ResultSet resultSet, int row) throws SQLException {
@@ -50,8 +55,17 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
         );
     }
 
+    public void setGiftCertificateTags(GiftCertificate giftCertificate) {
+        MapSqlParameterSource paramMap = new MapSqlParameterSource();
+        for (Tag tag : giftCertificate.getTags()) {
+            paramMap.addValue(TAG_ID, tag.getId());
+            paramMap.addValue(GIFT_CERTIFICATE_ID, giftCertificate.getId());
+            jdbcTemplate.update(INSERT_TAG_TO_GIFT_CERTIFICATE, paramMap);
+        }
+    }
+
     public Long create(GiftCertificate giftCertificate) {
-        return super.create(giftCertificate, INSERT);
+        return super.create(giftCertificate, INSERT, UPDATE);
     }
 
     public MapSqlParameterSource createAllParamMapWithoutId(GiftCertificate giftCertificate) {
@@ -71,14 +85,15 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
         return paramMap;
     }
 
-    public void delete(GiftCertificate giftCertificate) {
-        super.delete(giftCertificate, DELETE);
-    }
-
+    @Override
     public MapSqlParameterSource createIdParamMap(Long id) {
         MapSqlParameterSource paramMap = new MapSqlParameterSource();
         paramMap.addValue(ID, id);
         return paramMap;
+    }
+
+    public void delete(GiftCertificate giftCertificate) {
+        super.delete(giftCertificate, DELETE);
     }
 
     public void update(GiftCertificate giftCertificate) {

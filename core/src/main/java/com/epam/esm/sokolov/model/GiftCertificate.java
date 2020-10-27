@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class GiftCertificate implements IdentifiedRow {
 
@@ -26,6 +27,8 @@ public class GiftCertificate implements IdentifiedRow {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastUpdateDate;
     private Integer duration;
+
+    private List<Tag> tags;
 
     public GiftCertificate() {
     }
@@ -94,5 +97,13 @@ public class GiftCertificate implements IdentifiedRow {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }

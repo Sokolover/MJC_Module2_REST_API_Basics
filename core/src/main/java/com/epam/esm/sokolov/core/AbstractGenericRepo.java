@@ -19,14 +19,25 @@ public abstract class AbstractGenericRepo<T extends IdentifiedRow> implements Ge
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long create(T entity, String query) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        MapSqlParameterSource paramMap = createAllParamMapWithoutId(entity);
-        jdbcTemplate.update(query, paramMap, keyHolder);
-        Optional<BigInteger> generatedId = Optional
-                .of((BigInteger) keyHolder.getKey());
+    public Long create(T entity, String createQuery, String updateQuery) {
 
-        return generatedId.map(BigInteger::longValue).orElse(0L);
+        if (entity.getId() != null) {
+            update(entity, createQuery);
+            return entity.getId();
+        } else {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            MapSqlParameterSource paramMap = createAllParamMapWithoutId(entity);
+            jdbcTemplate.update(createQuery, paramMap, keyHolder);
+            if (keyHolder.getKey() instanceof BigInteger) {//todo test it with mysql!
+                Optional<BigInteger> generatedId = Optional
+                        .of((BigInteger) keyHolder.getKey());
+                return generatedId.map(BigInteger::longValue).orElse(0L);
+            } else {
+                Optional<Long> generatedId = Optional
+                        .of((Long) keyHolder.getKey());
+                return generatedId.orElse(0L);
+            }
+        }
     }
 
     public void delete(T entity, String query) {
@@ -52,4 +63,5 @@ public abstract class AbstractGenericRepo<T extends IdentifiedRow> implements Ge
                 query, this::mapEntity
         );
     }
+
 }
