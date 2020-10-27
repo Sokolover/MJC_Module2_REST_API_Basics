@@ -100,7 +100,7 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
         super.update(giftCertificate, UPDATE);
     }
 
-    public GiftCertificate findById(long id) {
+    public GiftCertificate findById(long id) {//todo добавить доставание тегов из базы
         try {
             return super.findById(id, SELECT_BY_ID);
         } catch (DataAccessException e) {
@@ -110,5 +110,5 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
 
     public List<GiftCertificate> findAll() {
         return super.findAll(SELECT_ALL);
-    }
+    }//todo добавить доставание тегов из базы
 }

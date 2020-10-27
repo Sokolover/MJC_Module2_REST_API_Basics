@@ -19,4 +19,6 @@ public interface TagRepo {
     List<Tag> findAll();
 
     Tag findByName(Tag entity);
+
+    List<Tag> findTagsByGiftCertificateId(long id);
 }
