@@ -10,4 +10,6 @@ import java.util.List;
 public interface TagService extends GenericService<Tag> {
 
     void updateList(List<Tag> tags);
+
+    List<Long> createList(List<Tag> tags);
 }

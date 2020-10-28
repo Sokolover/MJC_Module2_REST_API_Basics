@@ -50,7 +50,7 @@ class TagRepoImplTest {
             tag.setId(tagRepo.create(tag));
         }
         giftCertificate.setId(giftCertificateRepo.create(giftCertificate));
-        giftCertificateRepo.setGiftCertificateTags(giftCertificate);
+        giftCertificateRepo.setGiftCertificatesToTags(giftCertificate);
         List crossTable = findAll("select * from tag_has_gift_certificate");
         System.out.println(crossTable);
         Assertions.assertEquals(2, crossTable.size());

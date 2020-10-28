@@ -31,7 +31,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         createTags(giftCertificate);
         Long newId = giftCertificateRepo.create(giftCertificate);
         giftCertificate.setId(newId);
-        giftCertificateRepo.setGiftCertificateTags(giftCertificate);
+        giftCertificateRepo.setGiftCertificatesToTags(giftCertificate);
         return newId;
     }
 
@@ -39,8 +39,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         for (Tag tag : giftCertificate.getTags()) {
             Tag tagFromDb = tagRepo.findByName(tag);
             if (isNull(tagFromDb.getId())) {
-                Long newId = tagRepo.create(tag);
-                tag.setId(newId);
+                createNewTag(tag);
             } else {
                 tag.setId(tagFromDb.getId());
             }
@@ -62,6 +61,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         setNewFieldValues(giftCertificate);
 
         tagService.updateList(giftCertificate.getTags());
+        giftCertificateRepo.deleteGiftCertificatesToTags(giftCertificate);
+        giftCertificateRepo.setGiftCertificatesToTags(giftCertificate);
         giftCertificateRepo.update(giftCertificate);
     }
 
@@ -92,10 +93,37 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (isNull(duration)) {
             giftCertificate.setDuration(giftCertificateFromDatabase.getDuration());
         }
-        List<Tag> tags = giftCertificate.getTags();//todo при получении тегов без айƒи из сертификата с юјй надо ставить им айƒи
+        List<Tag> tags = giftCertificate.getTags();
         if (isNull(tags)) {
-            giftCertificate.setTags(giftCertificateFromDatabase.getTags());
+            List<Tag> tagsGiftCertificateFromDatabase = giftCertificateFromDatabase.getTags();
+            giftCertificate.setTags(tagsGiftCertificateFromDatabase);
+        } else {
+            updateTags(tags);
         }
+    }
+
+    private void updateTags(List<Tag> tags) {
+        for (Tag tag : tags) {
+            Tag findByNameTag = tagRepo.findByName(tag);
+            if (isNull(findByNameTag.getId())) {
+                createNewTag(tag);
+            } else {
+                updateTag(tag, findByNameTag);
+            }
+        }
+    }
+
+    private void updateTag(Tag tag, Tag findByNameTag) {
+        if (findByNameTag.getId().equals(tag.getId())) {
+            tagRepo.update(tag);
+        } else {
+            tag.setId(findByNameTag.getId());
+        }
+    }
+
+    private void createNewTag(Tag tag) {
+        Long newId = tagRepo.create(tag);
+        tag.setId(newId);
     }
 
     @Override
@@ -108,6 +136,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<GiftCertificate> findAll() {
-        return giftCertificateRepo.findAll();
+        List<GiftCertificate> giftCertificates = giftCertificateRepo.findAll();
+        for (GiftCertificate giftCertificate : giftCertificates) {
+            List<Tag> tags = tagRepo.findTagsByGiftCertificateId(giftCertificate.getId());
+            giftCertificate.setTags(tags);
+        }
+        return giftCertificates;
     }
 }

@@ -4,6 +4,7 @@ import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.repository.tag.TagRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,5 +46,14 @@ public class TagServiceImpl implements TagService {
         for (Tag tag : tags){
             this.update(tag);
         }
+    }
+
+    @Override
+    public List<Long> createList(List<Tag> tags) {
+        List<Long> newIdList = new ArrayList<>();
+        for (Tag tag : tags){
+            newIdList.add(this.create(tag));
+        }
+        return newIdList;
     }
 }
