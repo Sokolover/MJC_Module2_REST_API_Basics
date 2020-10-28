@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public interface GenericRepo<T extends IdentifiedRow> {
+public interface GenericRepository<T extends IdentifiedRow> {
 
     Long create(T entity, String createQuery, String updateQuery);
 

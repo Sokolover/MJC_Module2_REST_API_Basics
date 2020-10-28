@@ -1,10 +1,8 @@
 package com.epam.esm.sokolov.repository.certificate;
 
-import com.epam.esm.sokolov.core.AbstractGenericRepo;
+import com.epam.esm.sokolov.core.AbstractGenericRepository;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
-import com.epam.esm.sokolov.repository.RepositoryException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,11 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.format;
-import static java.util.Objects.nonNull;
-
 @Repository
-public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate> implements GiftCertificateRepo {
+public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<GiftCertificate> implements GiftCertificateRepository {
 
     private static final String ID = "id";
     private static final String NAME = "name";
@@ -44,7 +39,7 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public GiftCertificateRepoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public GiftCertificateRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -79,59 +74,16 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
 
     @Override
     public List<GiftCertificate> findAllByParams(Map<String, String> paramMap) {
-
-        String baseQuery = "select gift_certificate.*\n" +
-                "from tag,\n" +
-                "     tag_has_gift_certificate,\n" +
-                "     gift_certificate\n" +
-                "where\n" +
-                "   tag.id = tag_has_gift_certificate.tag_id\n" +
-                "   and gift_certificate.id = tag_has_gift_certificate.gift_certificate_id\n";
-        StringBuilder resultQuery = new StringBuilder(baseQuery);
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-
-        findByTagNameQueryPart(paramMap, resultQuery, mapSqlParameterSource);
-        findByPartOfQueryPart(paramMap, resultQuery, mapSqlParameterSource);
-        sortByQueryPart(paramMap, resultQuery);
-
-        resultQuery.append(";");
-
+        GiftCertificateRepositoryUtils giftCertificateRepositoryUtils = new GiftCertificateRepositoryUtils();
+        String resultQuery = giftCertificateRepositoryUtils.buildFindAllByParamQuery(paramMap);
+        MapSqlParameterSource mapSqlParameterSource = giftCertificateRepositoryUtils.getMapSqlParameterSource();
         return jdbcTemplate.query(
-                resultQuery.toString(),
+                resultQuery,
                 mapSqlParameterSource,
                 this::mapEntity
         );
     }
 
-    private void sortByQueryPart(Map<String, String> paramMap, StringBuilder resultQuery) {
-        String sortBy = paramMap.get("sortBy");
-        String sortDirection = paramMap.get("sortDirection");
-        if (nonNull(sortBy) && nonNull(sortDirection)) {
-            resultQuery.append(
-                    format("    order by gift_certificate.%s %s", sortBy, sortDirection)
-            );
-        }
-    }
-
-    private void findByPartOfQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
-        String partOf = paramMap.get("partOf");
-        String partValue = paramMap.get("partValue");
-        if (nonNull(partOf) && nonNull(partValue)) {
-            resultQuery.append(
-                    format("    and gift_certificate.%s like :partValue%n", partOf)
-            );
-//            mapSqlParameterSource.addValue("partValue", format("\\%%s\\%", partValue));//todo сделать чтобы работало
-            mapSqlParameterSource.addValue("partValue", "%" + partValue + "%");
-        }
-    }
-
-    private void findByTagNameQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
-        String tagName = paramMap.get("tagName");
-        if (nonNull(tagName)) {
-            resultQuery.append("    and tag.name like :tagName\n");
-            mapSqlParameterSource.addValue("tagName", tagName);
-        }
-    }
 
     public Long create(GiftCertificate giftCertificate) {
         return super.create(giftCertificate, INSERT, UPDATE);
@@ -160,23 +112,23 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
         paramMap.addValue(ID, id);
         return paramMap;
     }
-
+    @Override
     public void delete(GiftCertificate giftCertificate) {
         super.delete(giftCertificate, DELETE);
     }
-
+    @Override
     public void update(GiftCertificate giftCertificate) {
         super.update(giftCertificate, UPDATE);
     }
-
+    @Override
     public GiftCertificate findById(long id) {
 //        try {
-            return super.findById(id, SELECT_BY_ID);
+        return super.findById(id, SELECT_BY_ID);
 //        } catch (DataAccessException e) {
 //            return new GiftCertificate();
 //        }
     }
-
+    @Override
     public List<GiftCertificate> findAll() {
         return super.findAll(SELECT_ALL);
     }

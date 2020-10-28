@@ -1,59 +1,42 @@
 package com.epam.esm.sokolov.service.tag;
 
 import com.epam.esm.sokolov.model.Tag;
-import com.epam.esm.sokolov.repository.tag.TagRepo;
+import com.epam.esm.sokolov.repository.tag.TagRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TagServiceImpl implements TagService {
 
-    private TagRepo tagRepo;
+    private TagRepository tagRepository;
 
-    public TagServiceImpl(TagRepo tagRepo) {
-        this.tagRepo = tagRepo;
+    public TagServiceImpl(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
     @Override
     public Long create(Tag tag) {
-        return tagRepo.create(tag);
+        return tagRepository.create(tag);
     }
 
     @Override
     public void delete(Tag tag) {
-        tagRepo.delete(tag);
+        tagRepository.delete(tag);
     }
 
     @Override
     public void update(Tag tag) {
-        tagRepo.update(tag);
+        tagRepository.update(tag);
     }
 
     @Override
     public Tag findById(long id) {
-        return tagRepo.findById(id);
+        return tagRepository.findById(id);
     }
 
     @Override
     public List<Tag> findAll() {
-        return tagRepo.findAll();
-    }
-
-    @Override
-    public void updateList(List<Tag> tags) {
-        for (Tag tag : tags) {
-            this.update(tag);
-        }
-    }
-
-    @Override
-    public List<Long> createList(List<Tag> tags) {
-        List<Long> newIdList = new ArrayList<>();
-        for (Tag tag : tags) {
-            newIdList.add(this.create(tag));
-        }
-        return newIdList;
+        return tagRepository.findAll();
     }
 }

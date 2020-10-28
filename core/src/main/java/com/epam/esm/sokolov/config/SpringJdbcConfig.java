@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource("classpath:jdbc.properties")
 @ComponentScan("com.epam.esm.sokolov")
-@EnableTransactionManagement//todo попробовать поубирать и поинжектить бин PlatformTransactionManager
+@EnableTransactionManagement
 public class SpringJdbcConfig {
 
     private final Environment environment;
@@ -36,7 +36,6 @@ public class SpringJdbcConfig {
         return dataSource;
     }
 
-    //todo прикрутить куда-то
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);

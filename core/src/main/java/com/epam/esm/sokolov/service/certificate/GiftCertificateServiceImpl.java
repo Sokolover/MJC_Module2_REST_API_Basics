@@ -2,10 +2,10 @@ package com.epam.esm.sokolov.service.certificate;
 
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
-import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepo;
-import com.epam.esm.sokolov.repository.tag.TagRepo;
-import com.epam.esm.sokolov.service.tag.TagService;
+import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepository;
+import com.epam.esm.sokolov.repository.tag.TagRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -18,22 +18,21 @@ import static java.util.Objects.isNull;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private TagService tagService;
-    private GiftCertificateRepo giftCertificateRepo;
-    private TagRepo tagRepo;
+    private GiftCertificateRepository giftCertificateRepository;
+    private TagRepository tagRepository;
 
-    public GiftCertificateServiceImpl(TagService tagService, GiftCertificateRepo giftCertificateRepo, TagRepo tagRepo) {
-        this.tagService = tagService;
-        this.giftCertificateRepo = giftCertificateRepo;
-        this.tagRepo = tagRepo;
+    public GiftCertificateServiceImpl(GiftCertificateRepository giftCertificateRepository, TagRepository tagRepository) {
+        this.giftCertificateRepository = giftCertificateRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
+    @Transactional
     public Long create(GiftCertificate giftCertificate) {
         createTags(giftCertificate);
-        Long newId = giftCertificateRepo.create(giftCertificate);
+        Long newId = giftCertificateRepository.create(giftCertificate);
         giftCertificate.setId(newId);
-        giftCertificateRepo.setGiftCertificatesToTags(giftCertificate);
+        giftCertificateRepository.setGiftCertificatesToTags(giftCertificate);
         return newId;
     }
 
@@ -43,7 +42,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             return;
         }
         for (Tag tag : tags) {
-            Tag tagFromDb = tagRepo.findByName(tag);
+            Tag tagFromDb = tagRepository.findByName(tag);
             if (isNull(tagFromDb.getId())) {
                 createNewTag(tag);
             } else {
@@ -54,11 +53,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public void delete(GiftCertificate giftCertificate) {
-        giftCertificateRepo.deleteGiftCertificatesToTags(giftCertificate);
-        giftCertificateRepo.delete(giftCertificate);
+        giftCertificateRepository.deleteGiftCertificatesToTags(giftCertificate);
+        giftCertificateRepository.delete(giftCertificate);
     }
 
     @Override
+    @Transactional
     public void update(GiftCertificate giftCertificate) {
 
         if (giftCertificate.getId() == null) {
@@ -66,10 +66,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         setNewFieldValues(giftCertificate);
 
-        tagService.updateList(giftCertificate.getTags());
-        giftCertificateRepo.deleteGiftCertificatesToTags(giftCertificate);
-        giftCertificateRepo.setGiftCertificatesToTags(giftCertificate);
-        giftCertificateRepo.update(giftCertificate);
+        tagRepository.updateList(giftCertificate.getTags());
+        giftCertificateRepository.deleteGiftCertificatesToTags(giftCertificate);
+        giftCertificateRepository.setGiftCertificatesToTags(giftCertificate);
+        giftCertificateRepository.update(giftCertificate);
     }
 
     private void setNewFieldValues(GiftCertificate giftCertificate) {
@@ -137,7 +137,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void updateTags(List<Tag> tags) {
         for (Tag tag : tags) {
-            Tag findByNameTag = tagRepo.findByName(tag);
+            Tag findByNameTag = tagRepository.findByName(tag);
             if (isNull(findByNameTag.getId())) {
                 createNewTag(tag);
             } else {
@@ -148,42 +148,49 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void updateTag(Tag tag, Tag findByNameTag) {
         if (findByNameTag.getId().equals(tag.getId())) {
-            tagRepo.update(tag);
+            tagRepository.update(tag);
         } else {
             tag.setId(findByNameTag.getId());
         }
     }
 
     private void createNewTag(Tag tag) {
-        Long newId = tagRepo.create(tag);
+        Long newId = tagRepository.create(tag);
         tag.setId(newId);
     }
 
     @Override
+    @Transactional
     public GiftCertificate findById(long id) {
-        GiftCertificate giftCertificate = giftCertificateRepo.findById(id);
-        List<Tag> tags = tagRepo.findTagsByGiftCertificateId(id);
+        GiftCertificate giftCertificate = giftCertificateRepository.findById(id);
+        List<Tag> tags = tagRepository.findTagsByGiftCertificateId(id);
         giftCertificate.setTags(tags);
         return giftCertificate;
     }
 
     @Override
+    @Transactional
     public List<GiftCertificate> findAll() {
-        List<GiftCertificate> giftCertificates = giftCertificateRepo.findAll();
+        List<GiftCertificate> giftCertificates = giftCertificateRepository.findAll();
         setTagsToGiftCertificates(giftCertificates);
         return giftCertificates;
     }
 
     private void setTagsToGiftCertificates(List<GiftCertificate> giftCertificates) {
         for (GiftCertificate giftCertificate : giftCertificates) {
-            List<Tag> tags = tagRepo.findTagsByGiftCertificateId(giftCertificate.getId());
+            List<Tag> tags = tagRepository.findTagsByGiftCertificateId(giftCertificate.getId());
             giftCertificate.setTags(tags);
         }
     }
 
     @Override
     public List<GiftCertificate> findAllByParams(Map<String, String> paramMap) {
-        List<GiftCertificate> giftCertificates = giftCertificateRepo.findAllByParams(paramMap);
+        List<GiftCertificate> giftCertificates;
+        if (CollectionUtils.isEmpty(paramMap)) {
+            giftCertificates = giftCertificateRepository.findAll();
+        } else {
+            giftCertificates = giftCertificateRepository.findAllByParams(paramMap);
+        }
         setTagsToGiftCertificates(giftCertificates);
         return giftCertificates;
     }

@@ -1,7 +1,7 @@
 package com.epam.esm.sokolov.service;
 
 import com.epam.esm.sokolov.model.Tag;
-import com.epam.esm.sokolov.repository.tag.TagRepoImpl;
+import com.epam.esm.sokolov.repository.tag.TagRepositoryImpl;
 import com.epam.esm.sokolov.service.tag.TagServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class TagServiceImplTest {
     @InjectMocks
     TagServiceImpl tagServiceImpl;
     @Mock
-    TagRepoImpl tagRepoImpl;
+    TagRepositoryImpl tagRepoImpl;
 
     @Test
     public void shouldSaveAndReadSameValue() {

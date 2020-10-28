@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TagRepo {
+public interface TagRepository {
 
     Long create(Tag entity);
 
@@ -21,4 +21,6 @@ public interface TagRepo {
     Tag findByName(Tag entity);
 
     List<Tag> findTagsByGiftCertificateId(long id);
+
+    void updateList(List<Tag> tags);
 }

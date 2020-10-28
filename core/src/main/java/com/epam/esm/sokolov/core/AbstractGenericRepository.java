@@ -1,7 +1,6 @@
 package com.epam.esm.sokolov.core;
 
 import com.epam.esm.sokolov.repository.RepositoryException;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -18,17 +17,17 @@ import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 
 @Repository
-public abstract class AbstractGenericRepo<T extends IdentifiedRow> implements GenericRepo<T> {
+public abstract class AbstractGenericRepository<T extends IdentifiedRow> implements GenericRepository<T> {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public AbstractGenericRepo(NamedParameterJdbcTemplate jdbcTemplate) {
+    public AbstractGenericRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public Long create(T entity, String createQuery, String updateQuery) {
         if (nonNull(entity.getId())) {
-            update(entity, createQuery);
+            update(entity, updateQuery);//todo протестировать создание уже сущестующих сущностей, потому что тут было createQuery а не updateQuery
             return entity.getId();
         } else {
             KeyHolder keyHolder = new GeneratedKeyHolder();

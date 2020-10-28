@@ -3,7 +3,7 @@ package com.epam.esm.sokolov.repository.tag;
 import com.epam.esm.sokolov.config.DatabaseTestConfig;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
-import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepo;
+import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ import java.util.Map;
 
 @SpringJUnitConfig(classes = {DatabaseTestConfig.class})
 @ActiveProfiles("test")
-class TagRepoImplTest {
+class TagRepositoryImplTest {
 
     @Autowired
-    private TagRepo tagRepo;
+    private TagRepository tagRepository;
     @Autowired
-    private GiftCertificateRepo giftCertificateRepo;
+    private GiftCertificateRepository giftCertificateRepository;
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -47,10 +47,10 @@ class TagRepoImplTest {
         tags.add(fun);
         giftCertificate.setTags(tags);
         for (Tag tag : giftCertificate.getTags()) {
-            tag.setId(tagRepo.create(tag));
+            tag.setId(tagRepository.create(tag));
         }
-        giftCertificate.setId(giftCertificateRepo.create(giftCertificate));
-        giftCertificateRepo.setGiftCertificatesToTags(giftCertificate);
+        giftCertificate.setId(giftCertificateRepository.create(giftCertificate));
+        giftCertificateRepository.setGiftCertificatesToTags(giftCertificate);
         List crossTable = findAll("select * from tag_has_gift_certificate");
         System.out.println(crossTable);
         Assertions.assertEquals(10, crossTable.size());
@@ -71,7 +71,7 @@ class TagRepoImplTest {
 
     @Test
     void shouldFindAll() {
-        List<Tag> list = tagRepo.findAll();
+        List<Tag> list = tagRepository.findAll();
         for (Tag tag : list) {
             System.out.println(tag.getName());
         }
@@ -81,24 +81,24 @@ class TagRepoImplTest {
     @Test
     void shouldFindById() {
         Tag testTag = new Tag(1L, "first");
-        Tag tag = tagRepo.findById(1);
+        Tag tag = tagRepository.findById(1);
         Assertions.assertEquals(testTag, tag);
     }
 
     @Test
     void shouldCreate() {
         Tag testTag = new Tag("fourth");
-        Long newTagId = tagRepo.create(testTag);
+        Long newTagId = tagRepository.create(testTag);
         testTag.setId(newTagId);
-        Assertions.assertEquals(testTag, tagRepo.findById(newTagId));
+        Assertions.assertEquals(testTag, tagRepository.findById(newTagId));
     }
 
     @Test
     void shouldDelete() {
-        List<Tag> repoBeforeDelete = tagRepo.findAll();
+        List<Tag> repoBeforeDelete = tagRepository.findAll();
         System.out.println(repoBeforeDelete);
         Tag testTag = new Tag(3L, "third");
-        tagRepo.delete(testTag);
-        Assertions.assertEquals(repoBeforeDelete.size() - 1, tagRepo.findAll().size());
+        tagRepository.delete(testTag);
+        Assertions.assertEquals(repoBeforeDelete.size() - 1, tagRepository.findAll().size());
     }
 }
