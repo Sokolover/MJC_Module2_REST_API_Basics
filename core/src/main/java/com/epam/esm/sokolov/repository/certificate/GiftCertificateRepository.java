@@ -1,7 +1,6 @@
 package com.epam.esm.sokolov.repository.certificate;
 
 import com.epam.esm.sokolov.model.GiftCertificate;
-import com.epam.esm.sokolov.model.Tag;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -14,7 +14,7 @@ public class RepositoryException extends RuntimeException {
         super(message);
     }
 
-    public RepositoryException(String message, HttpStatus statusCode){
+    public RepositoryException(String message, HttpStatus statusCode) {
         super(message);
         this.statusCode = statusCode;
     }

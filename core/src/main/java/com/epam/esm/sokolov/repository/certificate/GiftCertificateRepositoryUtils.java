@@ -9,6 +9,12 @@ import static java.util.Objects.nonNull;
 
 class GiftCertificateRepositoryUtils {
 
+    private static final String PART_OF = "partOf";
+    private static final String PART_VALUE = "partValue";
+    private static final String SORT_BY = "sortBy";
+    private static final String SORT_DIRECTION = "sortDirection";
+    private static final String TAG_NAME = "tagName";
+
     private static final String BASE_QUERY = "select gift_certificate.*\n" +
             "from tag,\n" +
             "     tag_has_gift_certificate,\n" +
@@ -20,8 +26,8 @@ class GiftCertificateRepositoryUtils {
     private MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
     private static void sortByQueryPart(Map<String, String> paramMap, StringBuilder resultQuery) {
-        String sortBy = paramMap.get("sortBy");
-        String sortDirection = paramMap.get("sortDirection");
+        String sortBy = paramMap.get(SORT_BY);
+        String sortDirection = paramMap.get(SORT_DIRECTION);
         if (nonNull(sortBy) && nonNull(sortDirection)) {
             resultQuery.append(
                     format("    order by gift_certificate.%s %s", sortBy, sortDirection)
@@ -30,22 +36,23 @@ class GiftCertificateRepositoryUtils {
     }
 
     private static void findByPartOfQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
-        String partOf = paramMap.get("partOf");
-        String partValue = paramMap.get("partValue");
+        String partOf = paramMap.get(PART_OF);
+        String partValue = paramMap.get(PART_VALUE);
         if (nonNull(partOf) && nonNull(partValue)) {
             resultQuery.append(
                     format("    and gift_certificate.%s like :partValue%n", partOf)
             );
-//            mapSqlParameterSource.addValue("partValue", format("\\%%s\\%", partValue));//todo сделать чтобы работало
-            mapSqlParameterSource.addValue("partValue", "%" + partValue + "%");
+            //format("%%%s%%", partValue) <==> "%" + partValue + "%"
+            mapSqlParameterSource.addValue(PART_VALUE, format("%%%s%%", partValue));//todo проверить чтобы работало
+//            mapSqlParameterSource.addValue("partValue", "%" + partValue + "%");
         }
     }
 
     private static void findByTagNameQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
-        String tagName = paramMap.get("tagName");
+        String tagName = paramMap.get(TAG_NAME);
         if (nonNull(tagName)) {
             resultQuery.append("    and tag.name like :tagName\n");
-            mapSqlParameterSource.addValue("tagName", tagName);
+            mapSqlParameterSource.addValue(TAG_NAME, tagName);
         }
     }
 

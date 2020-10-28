@@ -13,7 +13,7 @@ import java.util.List;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan("com.epam")
+@ComponentScan("com.epam.esm")
 public class WebConfig implements WebMvcConfigurer {
 
     @Override

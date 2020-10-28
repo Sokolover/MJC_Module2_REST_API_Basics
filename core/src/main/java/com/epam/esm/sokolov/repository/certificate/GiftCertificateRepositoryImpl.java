@@ -13,29 +13,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static com.epam.esm.sokolov.repository.certificate.GiftCertificateRepositoryConstants.*;
+
 @Repository
 public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<GiftCertificate> implements GiftCertificateRepository {
-
-    private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String DESCRIPTION = "description";
-    private static final String PRICE = "price";
-    private static final String CREATE_DATE = "createDate";
-    private static final String LAST_UPDATE_DATE = "lastUpdateDate";
-    private static final String DURATION = "duration";
-    private static final String TAG_ID = "tag_id";
-    private static final String GIFT_CERTIFICATE_ID = "gift_certificate_id";
-
-    private static final String INSERT = "insert into gift_certificate (name, description, price, createDate, lastUpdateDate, duration) " +
-            "values (:name, :description, :price, :createDate, :lastUpdateDate, :duration)";
-    private static final String SELECT_BY_ID = "select * from gift_certificate where id = :id";
-    private static final String UPDATE = "update gift_certificate " +
-            "set name = :name, description = :description, price = :price, createDate = :createDate, lastUpdateDate = :lastUpdateDate, duration = :duration " +
-            "where id = :id";
-    private static final String DELETE = "delete from gift_certificate where id = :id";
-    private static final String DELETE_GIFT_CERTIFICATES_TO_TAGS = "delete from tag_has_gift_certificate where gift_certificate_id = :gift_certificate_id";
-    private static final String SELECT_ALL = "SELECT * FROM gift_certificate";
-    private static final String INSERT_TAG_TO_GIFT_CERTIFICATE = "INSERT INTO tag_has_gift_certificate (tag_id, gift_certificate_id) VALUES (:tag_id, :gift_certificate_id)";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -112,14 +93,17 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
         paramMap.addValue(ID, id);
         return paramMap;
     }
+
     @Override
     public void delete(GiftCertificate giftCertificate) {
         super.delete(giftCertificate, DELETE);
     }
+
     @Override
     public void update(GiftCertificate giftCertificate) {
         super.update(giftCertificate, UPDATE);
     }
+
     @Override
     public GiftCertificate findById(long id) {
 //        try {
@@ -128,6 +112,7 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
 //            return new GiftCertificate();
 //        }
     }
+
     @Override
     public List<GiftCertificate> findAll() {
         return super.findAll(SELECT_ALL);
