@@ -4,6 +4,7 @@ import com.epam.esm.sokolov.model.GiftCertificate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface GiftCertificateRepo {
@@ -21,4 +22,6 @@ public interface GiftCertificateRepo {
     void setGiftCertificatesToTags(GiftCertificate giftCertificate);
 
     void deleteGiftCertificatesToTags(GiftCertificate giftCertificate);
+
+    List<GiftCertificate> findAllByParams(Map<String, String> paramMap);
 }

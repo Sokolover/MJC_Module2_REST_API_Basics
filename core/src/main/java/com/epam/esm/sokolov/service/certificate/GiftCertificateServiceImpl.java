@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 
@@ -57,7 +58,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (giftCertificate.getId() == null) {
             return;
         }
-
         setNewFieldValues(giftCertificate);
 
         tagService.updateList(giftCertificate.getTags());
@@ -68,37 +68,64 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void setNewFieldValues(GiftCertificate giftCertificate) {
         GiftCertificate giftCertificateFromDatabase = findById(giftCertificate.getId());
+        setName(giftCertificate, giftCertificateFromDatabase);
+        setDescription(giftCertificate, giftCertificateFromDatabase);
+        setPrice(giftCertificate, giftCertificateFromDatabase);
+        setCreateDate(giftCertificate, giftCertificateFromDatabase);
+        setLastUpdateDate(giftCertificate, giftCertificateFromDatabase);
+        setDuration(giftCertificate, giftCertificateFromDatabase);
+        setTags(giftCertificate, giftCertificateFromDatabase);
+    }
 
-        String name = giftCertificate.getName();
-        if (isNull(name)) {
-            giftCertificate.setName(giftCertificateFromDatabase.getName());
-        }
-        String description = giftCertificate.getDescription();
-        if (isNull(description)) {
-            giftCertificate.setDescription(giftCertificateFromDatabase.getDescription());
-        }
-        BigDecimal price = giftCertificate.getPrice();
-        if (isNull(price)) {
-            giftCertificate.setPrice(giftCertificateFromDatabase.getPrice());
-        }
-        LocalDateTime createDate = giftCertificate.getCreateDate();
-        if (isNull(createDate)) {
-            giftCertificate.setCreateDate(giftCertificateFromDatabase.getCreateDate());
-        }
-        LocalDateTime lastUpdateDate = giftCertificate.getLastUpdateDate();
-        if (isNull(lastUpdateDate)) {
-            giftCertificate.setLastUpdateDate(giftCertificateFromDatabase.getLastUpdateDate());
-        }
-        Integer duration = giftCertificate.getDuration();
-        if (isNull(duration)) {
-            giftCertificate.setDuration(giftCertificateFromDatabase.getDuration());
-        }
+    private void setTags(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
         List<Tag> tags = giftCertificate.getTags();
         if (isNull(tags)) {
             List<Tag> tagsGiftCertificateFromDatabase = giftCertificateFromDatabase.getTags();
             giftCertificate.setTags(tagsGiftCertificateFromDatabase);
         } else {
             updateTags(tags);
+        }
+    }
+
+    private void setDuration(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
+        Integer duration = giftCertificate.getDuration();
+        if (isNull(duration)) {
+            giftCertificate.setDuration(giftCertificateFromDatabase.getDuration());
+        }
+    }
+
+    private void setLastUpdateDate(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
+        LocalDateTime lastUpdateDate = giftCertificate.getLastUpdateDate();
+        if (isNull(lastUpdateDate)) {
+            giftCertificate.setLastUpdateDate(giftCertificateFromDatabase.getLastUpdateDate());
+        }
+    }
+
+    private void setCreateDate(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
+        LocalDateTime createDate = giftCertificate.getCreateDate();
+        if (isNull(createDate)) {
+            giftCertificate.setCreateDate(giftCertificateFromDatabase.getCreateDate());
+        }
+    }
+
+    private void setPrice(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
+        BigDecimal price = giftCertificate.getPrice();
+        if (isNull(price)) {
+            giftCertificate.setPrice(giftCertificateFromDatabase.getPrice());
+        }
+    }
+
+    private void setDescription(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
+        String description = giftCertificate.getDescription();
+        if (isNull(description)) {
+            giftCertificate.setDescription(giftCertificateFromDatabase.getDescription());
+        }
+    }
+
+    private void setName(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
+        String name = giftCertificate.getName();
+        if (isNull(name)) {
+            giftCertificate.setName(giftCertificateFromDatabase.getName());
         }
     }
 
@@ -137,10 +164,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificate> findAll() {
         List<GiftCertificate> giftCertificates = giftCertificateRepo.findAll();
+        setTagsToGiftCertificates(giftCertificates);
+        return giftCertificates;
+    }
+
+    private void setTagsToGiftCertificates(List<GiftCertificate> giftCertificates) {
         for (GiftCertificate giftCertificate : giftCertificates) {
             List<Tag> tags = tagRepo.findTagsByGiftCertificateId(giftCertificate.getId());
             giftCertificate.setTags(tags);
         }
+    }
+
+    @Override
+    public List<GiftCertificate> findAllByParams(Map<String, String> paramMap) {
+        List<GiftCertificate> giftCertificates = giftCertificateRepo.findAllByParams(paramMap);
+        setTagsToGiftCertificates(giftCertificates);
         return giftCertificates;
     }
 }

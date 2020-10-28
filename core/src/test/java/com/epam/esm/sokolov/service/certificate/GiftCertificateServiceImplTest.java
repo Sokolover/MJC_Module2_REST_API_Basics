@@ -11,7 +11,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringJUnitConfig(classes = {DatabaseTestConfig.class})
 @ActiveProfiles("test")
@@ -19,6 +21,53 @@ class GiftCertificateServiceImplTest {
 
     @Autowired
     private GiftCertificateService giftCertificateService;
+
+    @Test
+    void shouldFindAllByAllParams() {
+
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("tagName", "fun");
+        paramMap.put("partOf", "name");
+        paramMap.put("partValue", "flix");
+        paramMap.put("sortBy", "lastUpdateDate");
+        paramMap.put("sortDirection", "desc");
+
+        List<GiftCertificate> giftCertificates = giftCertificateService.findAllByParams(paramMap);
+
+        for (GiftCertificate giftCertificate : giftCertificates) {
+            System.out.println(giftCertificate);
+        }
+    }
+
+    @Test
+    void shouldFindAllBySeveralParams1() {
+
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("tagName", "fun");
+        paramMap.put("sortBy", "lastUpdateDate");
+        paramMap.put("sortDirection", "desc");
+
+        List<GiftCertificate> giftCertificates = giftCertificateService.findAllByParams(paramMap);
+
+        for (GiftCertificate giftCertificate : giftCertificates) {
+            System.out.println(giftCertificate);
+        }
+    }
+
+    @Test
+    void shouldFindAllBySeveralParams2() {
+
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("tagName", "fun");
+        paramMap.put("partOf", "name");
+        paramMap.put("partValue", "flix");
+
+        List<GiftCertificate> giftCertificates = giftCertificateService.findAllByParams(paramMap);
+
+        for (GiftCertificate giftCertificate : giftCertificates) {
+            System.out.println(giftCertificate);
+        }
+    }
 
     @Test
     void shouldUpdateCertificate1() {

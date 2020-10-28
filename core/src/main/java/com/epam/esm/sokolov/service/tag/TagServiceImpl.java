@@ -42,8 +42,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void updateList(List<Tag> tags){
-        for (Tag tag : tags){
+    public void updateList(List<Tag> tags) {
+        for (Tag tag : tags) {
             this.update(tag);
         }
     }
@@ -51,7 +51,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Long> createList(List<Tag> tags) {
         List<Long> newIdList = new ArrayList<>();
-        for (Tag tag : tags){
+        for (Tag tag : tags) {
             newIdList.add(this.create(tag));
         }
         return newIdList;

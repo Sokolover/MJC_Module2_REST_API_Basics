@@ -53,7 +53,7 @@ class TagRepoImplTest {
         giftCertificateRepo.setGiftCertificatesToTags(giftCertificate);
         List crossTable = findAll("select * from tag_has_gift_certificate");
         System.out.println(crossTable);
-        Assertions.assertEquals(2, crossTable.size());
+        Assertions.assertEquals(10, crossTable.size());
     }
 
     List findAll(String query) {
@@ -75,7 +75,7 @@ class TagRepoImplTest {
         for (Tag tag : list) {
             System.out.println(tag.getName());
         }
-        Assertions.assertEquals(3, list.size());
+        Assertions.assertEquals(5, list.size());
     }
 
     @Test

@@ -12,6 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+
+import static java.lang.String.format;
+import static java.util.Objects.nonNull;
 
 @Repository
 public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate> implements GiftCertificateRepo {
@@ -72,6 +76,61 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
         jdbcTemplate.update(DELETE_GIFT_CERTIFICATES_TO_TAGS, paramMap);
     }
 
+    @Override
+    public List<GiftCertificate> findAllByParams(Map<String, String> paramMap) {
+
+        String baseQuery = "select gift_certificate.*\n" +
+                "from tag,\n" +
+                "     tag_has_gift_certificate,\n" +
+                "     gift_certificate\n" +
+                "where\n" +
+                "   tag.id = tag_has_gift_certificate.tag_id\n" +
+                "   and gift_certificate.id = tag_has_gift_certificate.gift_certificate_id\n";
+        StringBuilder resultQuery = new StringBuilder(baseQuery);
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+
+        findByTagNameQueryPart(paramMap, resultQuery, mapSqlParameterSource);
+        findByPartOfQueryPart(paramMap, resultQuery, mapSqlParameterSource);
+        sortByQueryPart(paramMap, resultQuery);
+
+        resultQuery.append(";");
+
+        return jdbcTemplate.query(
+                new String(resultQuery),
+                mapSqlParameterSource,
+                this::mapEntity
+        );
+    }
+
+    private void sortByQueryPart(Map<String, String> paramMap, StringBuilder resultQuery) {
+        String sortBy = paramMap.get("sortBy");
+        String sortDirection = paramMap.get("sortDirection");
+        if (nonNull(sortBy) && nonNull(sortDirection)) {
+            resultQuery.append(
+                    format("    order by gift_certificate.%s %s", sortBy, sortDirection)
+            );
+        }
+    }
+
+    private void findByPartOfQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
+        String partOf = paramMap.get("partOf");
+        String partValue = paramMap.get("partValue");
+        if (nonNull(partOf) && nonNull(partValue)) {
+            resultQuery.append(
+                    format("    and gift_certificate.%s like :partValue%n", partOf)
+            );
+            mapSqlParameterSource.addValue("partValue", "%" + partValue + "%");
+        }
+    }
+
+    private void findByTagNameQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
+        String tagName = paramMap.get("tagName");
+        if (nonNull(tagName)) {
+            resultQuery.append("    and tag.name like :tagName\n");
+            mapSqlParameterSource.addValue("tagName", tagName);
+        }
+    }
+
     public Long create(GiftCertificate giftCertificate) {
         return super.create(giftCertificate, INSERT, UPDATE);
     }
@@ -108,7 +167,7 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
         super.update(giftCertificate, UPDATE);
     }
 
-    public GiftCertificate findById(long id) {//todo добавить доставание тегов из базы
+    public GiftCertificate findById(long id) {
         try {
             return super.findById(id, SELECT_BY_ID);
         } catch (DataAccessException e) {
