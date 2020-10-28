@@ -6,6 +6,7 @@ import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepo;
 import com.epam.esm.sokolov.repository.tag.TagRepo;
 import com.epam.esm.sokolov.service.tag.TagService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,7 +38,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private void createTags(GiftCertificate giftCertificate) {
-        for (Tag tag : giftCertificate.getTags()) {
+        List<Tag> tags = giftCertificate.getTags();
+        if (CollectionUtils.isEmpty(tags)) {
+            return;
+        }
+        for (Tag tag : tags) {
             Tag tagFromDb = tagRepo.findByName(tag);
             if (isNull(tagFromDb.getId())) {
                 createNewTag(tag);
@@ -49,6 +54,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public void delete(GiftCertificate giftCertificate) {
+        giftCertificateRepo.deleteGiftCertificatesToTags(giftCertificate);
         giftCertificateRepo.delete(giftCertificate);
     }
 

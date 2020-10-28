@@ -23,16 +23,8 @@ public class GiftCertificateController {
     //      - sort by date/name ASC/DESC
     @GetMapping
     public List<GiftCertificate> findAll(
-//            @RequestParam(required = false) String tagName,
-//            @RequestParam(required = false) String partOf,
-//            @RequestParam(required = false) String partValue,
-//            @RequestParam(required = false) String sortBy,
-//            @RequestParam(required = false) String sortDirection
             @RequestParam Map<String, String> allParams
     ) {
-
-        System.out.println("Parameters are " + allParams.entrySet());
-
         if (!allParams.isEmpty()) {
             return giftCertificateService.findAllByParams(allParams);
         } else {

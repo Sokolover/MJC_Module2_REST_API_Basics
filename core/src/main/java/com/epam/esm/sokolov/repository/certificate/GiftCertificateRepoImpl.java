@@ -3,6 +3,7 @@ package com.epam.esm.sokolov.repository.certificate;
 import com.epam.esm.sokolov.core.AbstractGenericRepo;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
+import com.epam.esm.sokolov.repository.RepositoryException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -96,7 +97,7 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
         resultQuery.append(";");
 
         return jdbcTemplate.query(
-                new String(resultQuery),
+                resultQuery.toString(),
                 mapSqlParameterSource,
                 this::mapEntity
         );
@@ -119,6 +120,7 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
             resultQuery.append(
                     format("    and gift_certificate.%s like :partValue%n", partOf)
             );
+//            mapSqlParameterSource.addValue("partValue", format("\\%%s\\%", partValue));//todo сделать чтобы работало
             mapSqlParameterSource.addValue("partValue", "%" + partValue + "%");
         }
     }
@@ -168,11 +170,11 @@ public class GiftCertificateRepoImpl extends AbstractGenericRepo<GiftCertificate
     }
 
     public GiftCertificate findById(long id) {
-        try {
+//        try {
             return super.findById(id, SELECT_BY_ID);
-        } catch (DataAccessException e) {
-            return new GiftCertificate();
-        }
+//        } catch (DataAccessException e) {
+//            return new GiftCertificate();
+//        }
     }
 
     public List<GiftCertificate> findAll() {

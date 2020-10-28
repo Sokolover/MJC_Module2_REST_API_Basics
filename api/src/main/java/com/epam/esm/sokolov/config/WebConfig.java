@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(new MappingJackson2HttpMessageConverter());
     }
 
-    //    // fixme закомментить и проверить как работают даты
+    // fixme закомментить и проверить как работают даты
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         for (HttpMessageConverter<?> converter : converters) {

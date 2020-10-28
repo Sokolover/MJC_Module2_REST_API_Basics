@@ -2,6 +2,7 @@ package com.epam.esm.sokolov.repository.tag;
 
 import com.epam.esm.sokolov.core.AbstractGenericRepo;
 import com.epam.esm.sokolov.model.Tag;
+import com.epam.esm.sokolov.repository.RepositoryException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+
+import static java.lang.String.format;
 
 @Repository
 public class TagRepoImpl extends AbstractGenericRepo<Tag> implements TagRepo {
@@ -74,11 +77,11 @@ public class TagRepoImpl extends AbstractGenericRepo<Tag> implements TagRepo {
     }
 
     public Tag findById(long id) {
-        try {
+//        try {
             return super.findById(id, SELECT_BY_ID);
-        } catch (DataAccessException e) {
-            return new Tag();
-        }
+//        } catch (DataAccessException e) {
+//            return new Tag();
+//        }
     }
 
     public List<Tag> findAll() {
