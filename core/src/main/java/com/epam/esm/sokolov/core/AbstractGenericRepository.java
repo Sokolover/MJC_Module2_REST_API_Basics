@@ -38,7 +38,7 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
                         .map(Number::longValue)
                         .orElse(0L);
             } catch (DataAccessException e) {
-                throw new RepositoryException(format("Resource have not been created, bad request (id = %s)", entity.getId()), HttpStatus.BAD_REQUEST);
+                throw new RepositoryException(format("Resource have not been created, bad request (id = %s)", entity.getId()), HttpStatus.BAD_REQUEST, this.getClass());
             }
         }
     }
@@ -48,7 +48,7 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
         try {
             jdbcTemplate.update(query, paramMap);
         } catch (DataAccessException e) {
-            throw new RepositoryException(format("Resource have not been deleted, bad request (id = %s)", entity.getId()), HttpStatus.BAD_REQUEST);
+            throw new RepositoryException(format("Resource have not been deleted, bad request (id = %s)", entity.getId()), HttpStatus.BAD_REQUEST, this.getClass());
         }
     }
 
@@ -57,7 +57,7 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
         try {
             jdbcTemplate.update(query, paramMap);
         } catch (DataAccessException e) {
-            throw new RepositoryException(format("Resource have not been updated, bad request (id = %s)", entity.getId()), HttpStatus.BAD_REQUEST);
+            throw new RepositoryException(format("Resource have not been updated, bad request (id = %s)", entity.getId()), HttpStatus.BAD_REQUEST, this.getClass());
         }
     }
 
@@ -69,7 +69,8 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
                     paramMap,
                     this::mapEntity);
         } catch (DataAccessException e) {
-            throw new RepositoryException(format("Requested resource not found (id = %s)", id), HttpStatus.NOT_FOUND);
+            String message = format("Requested resource not found (id = %s)", id);
+            throw new RepositoryException(message, HttpStatus.NOT_FOUND, this.getClass());
         }
     }
 
@@ -79,7 +80,7 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
                 this::mapEntity
         );
         if (CollectionUtils.isEmpty(list)) {
-            throw new RepositoryException("List is empty", HttpStatus.NOT_FOUND);
+            throw new RepositoryException("List is empty", HttpStatus.NOT_FOUND, this.getClass());
         } else {
             return list;
         }

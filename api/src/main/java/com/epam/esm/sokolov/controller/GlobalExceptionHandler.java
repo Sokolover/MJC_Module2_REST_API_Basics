@@ -1,6 +1,9 @@
 package com.epam.esm.sokolov.controller;
 
+import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.repository.RepositoryException;
+import com.epam.esm.sokolov.repository.tag.TagRepository;
+import com.epam.esm.sokolov.repository.tag.TagRepositoryImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,7 +32,12 @@ class GlobalExceptionHandler {
     public ResponseEntity handleRepositoryException(RepositoryException e) {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put(ERROR_MESSAGE, e.getMessage());
-        errorMap.put(ERROR_CODE, String.valueOf(e.getStatusCode().value()));
+
+        if (e.getClazz() == TagRepositoryImpl.class) {
+            errorMap.put(ERROR_CODE, e.getStatusCode().value() + "01");
+        } else {
+            errorMap.put(ERROR_CODE, e.getStatusCode().value() + "02");
+        }
 
         return ResponseEntity
                 .status(e.getStatusCode())
