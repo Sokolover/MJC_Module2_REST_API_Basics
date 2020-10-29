@@ -1,8 +1,6 @@
 package com.epam.esm.sokolov.controller;
 
-import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.repository.RepositoryException;
-import com.epam.esm.sokolov.repository.tag.TagRepository;
 import com.epam.esm.sokolov.repository.tag.TagRepositoryImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,8 @@ class GlobalExceptionHandler {
 
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ERROR_CODE = "errorCode";
+    private static final String TAG_ERROR_CODE = "01";
+    private static final String GIFT_CERTIFICATE_ERROR_CODE = "02";
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -33,10 +33,10 @@ class GlobalExceptionHandler {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put(ERROR_MESSAGE, e.getMessage());
 
-        if (e.getClazz() == TagRepositoryImpl.class) {
-            errorMap.put(ERROR_CODE, e.getStatusCode().value() + "01");
+        if (e.getRepositoryClass() == TagRepositoryImpl.class) {
+            errorMap.put(ERROR_CODE, e.getStatusCode().value() + TAG_ERROR_CODE);
         } else {
-            errorMap.put(ERROR_CODE, e.getStatusCode().value() + "02");
+            errorMap.put(ERROR_CODE, e.getStatusCode().value() + GIFT_CERTIFICATE_ERROR_CODE);
         }
 
         return ResponseEntity
