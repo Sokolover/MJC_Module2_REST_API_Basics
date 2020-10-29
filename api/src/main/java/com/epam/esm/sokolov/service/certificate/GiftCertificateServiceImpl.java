@@ -70,42 +70,53 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             return;
         }
         GiftCertificate giftCertificate = giftCertificateConverter.convert(giftCertificateDTO);
-        List<Tag> tagsFromDatabase = tagRepository.findTagsByGiftCertificateId(giftCertificate.getId());
 
-        setTags(giftCertificate, tagsFromDatabase);
+//        giftCertificate.getTags()
+//                .forEach(tagRepository::create);
 
-        tagRepository.updateList(giftCertificate.getTags());
+//        for (Tag tag : giftCertificate.getTags()) {
+//            Long id = tagRepository.create(tag);
+//            tag.setId(id);
+//        }
+
+        giftCertificate.getTags().
+                forEach(tag -> tag.setId(tagRepository.create(tag)));
+
+//        List<Tag> tagsFromDatabase = tagRepository.findTagsByGiftCertificateId(giftCertificate.getId());
+//        setTags(giftCertificate, tagsFromDatabase);
+//        tagRepository.updateList(giftCertificate.getTags());
+
         resetGiftCertificatesToTagsLinks(giftCertificate);
         giftCertificateRepository.update(giftCertificate);
     }
 
-    private void setTags(GiftCertificate giftCertificate, List<Tag> tagsFromDatabase) {
-        List<Tag> tags = giftCertificate.getTags();
-        if (isNull(tags)) {
-            giftCertificate.setTags(tagsFromDatabase);
-        } else {
-            updateTags(tags);
-        }
-    }
-
-    private void updateTags(List<Tag> tags) {
-        for (Tag tag : tags) {
-            Tag findByNameTag = tagRepository.findByName(tag);
-            if (isNull(findByNameTag.getId())) {
-                createNewTag(tag);
-            } else {
-                updateTag(tag, findByNameTag);
-            }
-        }
-    }
-
-    private void updateTag(Tag tag, Tag findByNameTag) {
-        if (findByNameTag.getId().equals(tag.getId())) {
-            tagRepository.update(tag);
-        } else {
-            tag.setId(findByNameTag.getId());
-        }
-    }
+//    private void setTags(GiftCertificate giftCertificate, List<Tag> tagsFromDatabase) {
+//        List<Tag> tags = giftCertificate.getTags();
+//        if (isNull(tags)) {
+//            giftCertificate.setTags(tagsFromDatabase);
+//        } else {
+//            updateTags(tags);
+//        }
+//    }
+//
+//    private void updateTags(List<Tag> tags) {
+//        for (Tag tag : tags) {
+//            Tag findByNameTag = tagRepository.findByName(tag);
+//            if (isNull(findByNameTag.getId())) {
+//                createNewTag(tag);
+//            } else {
+//                updateTag(tag, findByNameTag);
+//            }
+//        }
+//    }
+//
+//    private void updateTag(Tag tag, Tag findByNameTag) {
+//        if (findByNameTag.getId().equals(tag.getId())) {
+//            tagRepository.update(tag);
+//        } else {
+//            tag.setId(findByNameTag.getId());
+//        }
+//    }
 
     private void createNewTag(Tag tag) {
         Long newId = tagRepository.create(tag);
@@ -116,60 +127,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateRepository.deleteGiftCertificatesToTags(giftCertificate);
         giftCertificateRepository.setGiftCertificatesToTags(giftCertificate);
     }
-
-//    private void setNewFieldValues(GiftCertificate giftCertificate) {
-//        GiftCertificate giftCertificateFromDatabase = findById(giftCertificate.getId());
-//        setName(giftCertificate, giftCertificateFromDatabase);
-//        setDescription(giftCertificate, giftCertificateFromDatabase);
-//        setPrice(giftCertificate, giftCertificateFromDatabase);
-//        setCreateDate(giftCertificate, giftCertificateFromDatabase);
-//        setLastUpdateDate(giftCertificate, giftCertificateFromDatabase);
-//        setDuration(giftCertificate, giftCertificateFromDatabase);
-//        setTags(giftCertificate, giftCertificateFromDatabase);
-
-//    }
-
-//    private void setDuration(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
-//        Integer duration = giftCertificate.getDuration();
-//        if (isNull(duration)) {
-//            giftCertificate.setDuration(giftCertificateFromDatabase.getDuration());
-//        }
-//    }
-//
-//    private void setLastUpdateDate(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
-//        LocalDateTime lastUpdateDate = giftCertificate.getLastUpdateDate();
-//        if (isNull(lastUpdateDate)) {
-//            giftCertificate.setLastUpdateDate(giftCertificateFromDatabase.getLastUpdateDate());
-//        }
-//    }
-//
-//    private void setCreateDate(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
-//        LocalDateTime createDate = giftCertificate.getCreateDate();
-//        if (isNull(createDate)) {
-//            giftCertificate.setCreateDate(giftCertificateFromDatabase.getCreateDate());
-//        }
-//    }
-//
-//    private void setPrice(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
-//        BigDecimal price = giftCertificate.getPrice();
-//        if (isNull(price)) {
-//            giftCertificate.setPrice(giftCertificateFromDatabase.getPrice());
-//        }
-//    }
-//
-//    private void setDescription(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
-//        String description = giftCertificate.getDescription();
-//        if (isNull(description)) {
-//            giftCertificate.setDescription(giftCertificateFromDatabase.getDescription());
-//        }
-//    }
-//
-//    private void setName(GiftCertificate giftCertificate, GiftCertificate giftCertificateFromDatabase) {
-//        String name = giftCertificate.getName();
-//        if (isNull(name)) {
-//            giftCertificate.setName(giftCertificateFromDatabase.getName());
-//        }
-//    }
 
     @Override
     @Transactional
