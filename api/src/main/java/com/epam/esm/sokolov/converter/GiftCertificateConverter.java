@@ -1,16 +1,14 @@
 package com.epam.esm.sokolov.converter;
 
 import com.epam.esm.sokolov.dto.GiftCertificateDTO;
-import com.epam.esm.sokolov.dto.TagDTO;
 import com.epam.esm.sokolov.model.GiftCertificate;
-import com.epam.esm.sokolov.model.Tag;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.ZonedDateTime;
 
 import static com.epam.esm.sokolov.converter.TagConverter.convertTagsDtosFromTag;
 import static com.epam.esm.sokolov.converter.TagConverter.convertTagsFromTagDtos;
+import static java.util.Objects.nonNull;
 
 /**
  * Created by.
@@ -37,10 +35,16 @@ public class GiftCertificateConverter {
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(source.getId());
         giftCertificate.setName(source.getName());
-        giftCertificate.setCreateDate(DateConverter.getLocalDate(source.getCreateDate()));
-        giftCertificate.setCreateDateTimeZone(source.getCreateDate().getZone().toString());
-        giftCertificate.setLastUpdateDate(DateConverter.getLocalDate(source.getLastUpdateDate()));
-        giftCertificate.setLastUpdateDateTimeZone(source.getLastUpdateDate().getZone().toString());
+        ZonedDateTime createDate = source.getCreateDate();
+        if (nonNull(createDate)) {
+            giftCertificate.setCreateDate(DateConverter.getLocalDate(createDate));
+            giftCertificate.setCreateDateTimeZone(createDate.getZone().toString());
+        }
+        ZonedDateTime lastUpdateDate = source.getLastUpdateDate();
+        if (nonNull(createDate)) {
+            giftCertificate.setLastUpdateDate(DateConverter.getLocalDate(lastUpdateDate));
+            giftCertificate.setLastUpdateDateTimeZone(lastUpdateDate.getZone().toString());
+        }
         giftCertificate.setDescription(source.getDescription());
         giftCertificate.setPrice(source.getPrice());
         giftCertificate.setTags(convertTagsFromTagDtos(source.getTags()));
