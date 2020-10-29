@@ -2,12 +2,18 @@ package com.epam.esm.sokolov.controller;
 
 import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.service.tag.TagService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/tags")
+@RequestMapping("/api/tags")
+@Api(value = "TagControllerApi", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TagController {
 
     private TagService tagService;
@@ -22,6 +28,8 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation("Gets the tag with specific id")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Tag.class)})
     public Tag findById(@PathVariable Long id) {
         return tagService.findById(id);
     }
