@@ -19,6 +19,8 @@ import static java.util.Objects.nonNull;
 @Repository
 public abstract class AbstractGenericRepository<T extends IdentifiedRow> implements GenericRepository<T> {
 
+    private static final String ID = "id";
+
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     public AbstractGenericRepository(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -86,4 +88,9 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
         }
     }
 
+    protected MapSqlParameterSource createIdParamMap(Long id) {
+        MapSqlParameterSource paramMap = new MapSqlParameterSource();
+        paramMap.addValue(ID, id);
+        return paramMap;
+    }
 }

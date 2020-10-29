@@ -24,7 +24,5 @@ public interface GenericRepository<T extends IdentifiedRow> {
 
     MapSqlParameterSource createAllParamMap(T entity);
 
-    MapSqlParameterSource createIdParamMap(Long id);
-
     T mapEntity(ResultSet resultSet, int row) throws SQLException;
 }

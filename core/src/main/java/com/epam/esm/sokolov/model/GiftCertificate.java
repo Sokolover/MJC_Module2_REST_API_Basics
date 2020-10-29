@@ -17,16 +17,16 @@ public class GiftCertificate implements IdentifiedRow {
     private String name;
     private String description;
     private BigDecimal price;
-    //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) //todo в конце удалить эти комменты
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSz")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+//    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createDate;
-    //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSz")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private String createDateTimeZone;
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+//    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastUpdateDate;
+    private String lastUpdateDateTimeZone;
     private Integer duration;
 
     private List<Tag> tags;
@@ -34,13 +34,15 @@ public class GiftCertificate implements IdentifiedRow {
     public GiftCertificate() {
     }
 
-    public GiftCertificate(Long id, String name, String description, BigDecimal price, LocalDateTime createDate, LocalDateTime lastUpdateDate, Integer duration) {
+    public GiftCertificate(Long id, String name, String description, BigDecimal price, LocalDateTime createDate, String createDateTimeZone, LocalDateTime lastUpdateDate, String lastUpdateDateTimeZone, Integer duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.createDate = createDate;
+        this.createDateTimeZone = createDateTimeZone;
         this.lastUpdateDate = lastUpdateDate;
+        this.lastUpdateDateTimeZone = lastUpdateDateTimeZone;
         this.duration = duration;
     }
 
@@ -106,6 +108,22 @@ public class GiftCertificate implements IdentifiedRow {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public String getCreateDateTimeZone() {
+        return createDateTimeZone;
+    }
+
+    public void setCreateDateTimeZone(String createDateTimeZone) {
+        this.createDateTimeZone = createDateTimeZone;
+    }
+
+    public String getLastUpdateDateTimeZone() {
+        return lastUpdateDateTimeZone;
+    }
+
+    public void setLastUpdateDateTimeZone(String lastUpdateDateTimeZone) {
+        this.lastUpdateDateTimeZone = lastUpdateDateTimeZone;
     }
 
     @Override

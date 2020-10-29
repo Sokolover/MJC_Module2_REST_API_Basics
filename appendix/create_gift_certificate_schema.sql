@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS `gift_certificate`.`tag`
     `id`   BIGINT(100)  NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(200) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+    UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE
 )
     ENGINE = InnoDB;
 
@@ -33,13 +34,15 @@ CREATE TABLE IF NOT EXISTS `gift_certificate`.`tag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gift_certificate`.`gift_certificate`
 (
-    `id`             BIGINT(100)   NOT NULL AUTO_INCREMENT,
-    `name`           VARCHAR(200)  NOT NULL,
-    `description`    VARCHAR(1000) NOT NULL,
-    `price`          DECIMAL(7, 2) NOT NULL,
-    `createDate`     DATETIME      NOT NULL,
-    `lastUpdateDate` DATETIME      NOT NULL,
-    `duration`       INT           NOT NULL,
+    `id`                     BIGINT(100)   NOT NULL AUTO_INCREMENT,
+    `name`                   VARCHAR(200)  NOT NULL,
+    `description`            VARCHAR(1000) NOT NULL,
+    `price`                  DECIMAL(7, 2) NOT NULL,
+    `createDate`             DATETIME      NOT NULL,
+    `createDateTimeZone`     VARCHAR(50)   NOT NULL,
+    `lastUpdateDate`         DATETIME      NOT NULL,
+    `lastUpdateDateTimeZone` VARCHAR(50)   NOT NULL,
+    `duration`               INT           NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
 )

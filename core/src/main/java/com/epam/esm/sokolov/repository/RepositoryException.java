@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 public class RepositoryException extends RuntimeException {
 
     private HttpStatus statusCode;
-    private Class clazz;
+    private Class repositoryClass;
 
     public RepositoryException() {
         super();
@@ -20,10 +20,10 @@ public class RepositoryException extends RuntimeException {
         this.statusCode = statusCode;
     }
 
-    public RepositoryException(String message, HttpStatus statusCode, Class clazz) {
+    public RepositoryException(String message, HttpStatus statusCode, Class repositoryClass) {
         super(message);
         this.statusCode = statusCode;
-        this.clazz = clazz;
+        this.repositoryClass = repositoryClass;
     }
 
     public RepositoryException(String message, Throwable cause) {
@@ -43,7 +43,7 @@ public class RepositoryException extends RuntimeException {
         this.statusCode = statusCode;
     }
 
-    public Class getClazz() {
-        return clazz;
+    public Class getRepositoryClass() {
+        return repositoryClass;
     }
 }

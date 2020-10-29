@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.epam.esm.sokolov.repository.certificate.GiftCertificateRepositoryConstants.*;
+import static com.epam.esm.sokolov.repository.certificate.GiftCertificateRepositoryUtils.buildUpdateQuery;
 
 @Repository
 public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<GiftCertificate> implements GiftCertificateRepository {
@@ -25,6 +26,7 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public GiftCertificate mapEntity(ResultSet resultSet, int row) throws SQLException {
         return new GiftCertificate(
                 resultSet.getLong(ID),
@@ -32,11 +34,14 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
                 resultSet.getString(DESCRIPTION),
                 resultSet.getBigDecimal(PRICE),
                 resultSet.getObject(CREATE_DATE, LocalDateTime.class),
+                resultSet.getString(CREATE_DATE_TIME_ZONE),
                 resultSet.getObject(LAST_UPDATE_DATE, LocalDateTime.class),
+                resultSet.getString(LAST_UPDATE_DATE_TIMEZONE),
                 resultSet.getInt(DURATION)
         );
     }
 
+    @Override
     public void setGiftCertificatesToTags(GiftCertificate giftCertificate) {
         MapSqlParameterSource paramMap = new MapSqlParameterSource();
         for (Tag tag : giftCertificate.getTags()) {
@@ -65,32 +70,16 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
         );
     }
 
-
+    @Override
     public Long create(GiftCertificate giftCertificate) {
-        return super.create(giftCertificate, INSERT, UPDATE);
+        String updateQuery = buildUpdateQuery(giftCertificate);
+        return super.create(giftCertificate, INSERT, updateQuery);
     }
 
-    public MapSqlParameterSource createAllParamMapWithoutId(GiftCertificate giftCertificate) {
-        MapSqlParameterSource paramMap = new MapSqlParameterSource();
-        paramMap.addValue(NAME, giftCertificate.getName());
-        paramMap.addValue(DESCRIPTION, giftCertificate.getDescription());
-        paramMap.addValue(PRICE, giftCertificate.getPrice());
-        paramMap.addValue(CREATE_DATE, giftCertificate.getCreateDate());
-        paramMap.addValue(LAST_UPDATE_DATE, giftCertificate.getLastUpdateDate());
-        paramMap.addValue(DURATION, giftCertificate.getDuration());
-        return paramMap;
-    }
 
     public MapSqlParameterSource createAllParamMap(GiftCertificate giftCertificate) {
         MapSqlParameterSource paramMap = createAllParamMapWithoutId(giftCertificate);
         paramMap.addValue(ID, giftCertificate.getId());
-        return paramMap;
-    }
-
-    @Override
-    public MapSqlParameterSource createIdParamMap(Long id) {
-        MapSqlParameterSource paramMap = new MapSqlParameterSource();
-        paramMap.addValue(ID, id);
         return paramMap;
     }
 
@@ -101,20 +90,31 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
 
     @Override
     public void update(GiftCertificate giftCertificate) {
-        super.update(giftCertificate, UPDATE);
+        String updateQuery = buildUpdateQuery(giftCertificate);
+        super.update(giftCertificate, updateQuery);
     }
 
     @Override
     public GiftCertificate findById(long id) {
-//        try {
         return super.findById(id, SELECT_BY_ID);
-//        } catch (DataAccessException e) {
-//            return new GiftCertificate();
-//        }
     }
 
     @Override
     public List<GiftCertificate> findAll() {
         return super.findAll(SELECT_ALL);
+    }
+
+    @Override
+    public MapSqlParameterSource createAllParamMapWithoutId(GiftCertificate giftCertificate) {
+        MapSqlParameterSource paramMap = new MapSqlParameterSource();
+        paramMap.addValue(NAME, giftCertificate.getName());
+        paramMap.addValue(DESCRIPTION, giftCertificate.getDescription());
+        paramMap.addValue(PRICE, giftCertificate.getPrice());
+        paramMap.addValue(CREATE_DATE, giftCertificate.getCreateDate());
+        paramMap.addValue(CREATE_DATE_TIME_ZONE, giftCertificate.getCreateDateTimeZone());
+        paramMap.addValue(LAST_UPDATE_DATE, giftCertificate.getLastUpdateDate());
+        paramMap.addValue(LAST_UPDATE_DATE_TIMEZONE, giftCertificate.getLastUpdateDateTimeZone());
+        paramMap.addValue(DURATION, giftCertificate.getDuration());
+        return paramMap;
     }
 }

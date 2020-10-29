@@ -17,7 +17,6 @@ import static com.epam.esm.sokolov.repository.tag.TagRepositoryConstants.*;
 @Repository
 public class TagRepositoryImpl extends AbstractGenericRepository<Tag> implements TagRepository {
 
-
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     public TagRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -59,11 +58,7 @@ public class TagRepositoryImpl extends AbstractGenericRepository<Tag> implements
     }
 
     public Tag findById(long id) {
-//        try {
         return super.findById(id, SELECT_BY_ID);
-//        } catch (DataAccessException e) {
-//            return new Tag();
-//        }
     }
 
     public List<Tag> findAll() {
@@ -72,9 +67,7 @@ public class TagRepositoryImpl extends AbstractGenericRepository<Tag> implements
 
     @Override
     public void updateList(List<Tag> tags) {
-        for (Tag tag : tags) {
-            this.update(tag);
-        }
+        tags.forEach(this::update);
     }
 
     @Override
@@ -88,13 +81,6 @@ public class TagRepositoryImpl extends AbstractGenericRepository<Tag> implements
     public MapSqlParameterSource createAllParamMap(Tag tag) {
         MapSqlParameterSource paramMap = createAllParamMapWithoutId(tag);
         paramMap.addValue(ID, tag.getId());
-        return paramMap;
-    }
-
-    @Override
-    public MapSqlParameterSource createIdParamMap(Long id) {
-        MapSqlParameterSource paramMap = new MapSqlParameterSource();
-        paramMap.addValue(ID, id);
         return paramMap;
     }
 
