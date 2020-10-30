@@ -1,10 +1,12 @@
 package com.epam.esm.sokolov.converter;
 
 import com.epam.esm.sokolov.dto.GiftCertificateDTO;
+import com.epam.esm.sokolov.dto.TagDTO;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static com.epam.esm.sokolov.converter.TagConverter.convertTagsDtosFromTag;
 import static com.epam.esm.sokolov.converter.TagConverter.convertTagsFromTagDtos;
@@ -26,8 +28,8 @@ public class GiftCertificateConverter {
         giftCertificateDTO.setLastUpdateDate(DateConverter.getZonedDateTime(source.getLastUpdateDate(), source.getLastUpdateDateTimeZone()));
         giftCertificateDTO.setDescription(source.getDescription());
         giftCertificateDTO.setPrice(source.getPrice());
-        giftCertificateDTO.setTags(convertTagsDtosFromTag(source.getTags()));
         giftCertificateDTO.setDuration(source.getDuration());
+        giftCertificateDTO.setTags(convertTagsDtosFromTag(source.getTags()));
         return giftCertificateDTO;
     }
 
@@ -47,8 +49,11 @@ public class GiftCertificateConverter {
         }
         giftCertificate.setDescription(source.getDescription());
         giftCertificate.setPrice(source.getPrice());
-        giftCertificate.setTags(convertTagsFromTagDtos(source.getTags()));
         giftCertificate.setDuration(source.getDuration());
+        List<TagDTO> tags = source.getTags();
+        if (nonNull(tags)) {
+            giftCertificate.setTags(convertTagsFromTagDtos(tags));
+        }
         return giftCertificate;
     }
 }
