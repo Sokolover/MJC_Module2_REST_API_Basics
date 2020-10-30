@@ -6,6 +6,7 @@ import com.epam.esm.sokolov.model.Tag;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,8 +44,12 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
 
     @Override
     public void setGiftCertificatesToTags(GiftCertificate giftCertificate) {
+        List<Tag> tags = giftCertificate.getTags();
+        if(CollectionUtils.isEmpty(tags)){
+            return;
+        }
         MapSqlParameterSource paramMap = new MapSqlParameterSource();
-        for (Tag tag : giftCertificate.getTags()) {
+        for (Tag tag : tags) {
             paramMap.addValue(TAG_ID, tag.getId());
             paramMap.addValue(GIFT_CERTIFICATE_ID, giftCertificate.getId());
             jdbcTemplate.update(INSERT_TAG_TO_GIFT_CERTIFICATE, paramMap);
