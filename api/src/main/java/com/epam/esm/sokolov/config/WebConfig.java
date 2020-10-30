@@ -22,7 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(new MappingJackson2HttpMessageConverter());
     }
 
-    // fixme закомментить и проверить как работают даты
+    //need to convert LocalDateTime from/to json not as timestamp
+    //with this config : "createDate": "2020-10-23T02:37:39.100+03:00"
+    //without this config : "createDate": 1603409859.000000000
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         for (HttpMessageConverter<?> converter : converters) {
