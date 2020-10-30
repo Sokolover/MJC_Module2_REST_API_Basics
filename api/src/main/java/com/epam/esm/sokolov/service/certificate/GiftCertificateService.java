@@ -11,7 +11,5 @@ import java.util.Map;
 @Service
 public interface GiftCertificateService extends GenericService<GiftCertificateDTO> {
 
-    List<GiftCertificate> findAllByParams(Map<String, String> paramMap);
-
-
+    List<GiftCertificateDTO> findAllByParams(Map<String, String> paramMap);
 }

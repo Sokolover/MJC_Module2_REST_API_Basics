@@ -22,7 +22,7 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/search")
-    public List<GiftCertificate> findAll(@RequestParam Map<String, String> allParams) {
+    public List<GiftCertificateDTO> findAll(@RequestParam Map<String, String> allParams) {
         return giftCertificateService.findAllByParams(allParams);
     }
 

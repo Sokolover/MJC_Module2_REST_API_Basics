@@ -156,7 +156,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificate> findAllByParams(Map<String, String> paramMap) {
+    public List<GiftCertificateDTO> findAllByParams(Map<String, String> paramMap) {
         List<GiftCertificate> giftCertificates;
         if (CollectionUtils.isEmpty(paramMap)) {
             giftCertificates = giftCertificateRepository.findAll();
@@ -164,6 +164,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             giftCertificates = giftCertificateRepository.findAllByParams(paramMap);
         }
         setTagsToGiftCertificates(giftCertificates);
-        return giftCertificates;
+        return giftCertificates
+                .stream()
+                .map(giftCertificateConverter::convert)
+                .collect(Collectors.toList());
     }
 }
