@@ -24,17 +24,7 @@ public class GiftCertificateDTO {
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateDeserializer.class)
     private ZonedDateTime createDate;
-    //      {
-//          id: 17,
-//          name: "UTCLastLastTest",
-//          description: "5 any films",
-//          price: 5.5,
-//          createDate: "2020-10-23T09:37:39+03:00",
-//          lastUpdateDate: "2020-10-23T12:37:39.000+0300",
-//          duration: 10,
-//          tags: [ ]
-//      }
-    @JsonSerialize(using = CustomDateSerializer.class)//todo выбрать сериалайзер
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateDeserializer.class)
     private ZonedDateTime lastUpdateDate;
     private Integer duration;
