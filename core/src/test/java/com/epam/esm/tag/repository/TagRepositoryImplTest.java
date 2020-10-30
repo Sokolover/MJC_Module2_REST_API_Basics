@@ -1,11 +1,12 @@
-package com.epam.esm.sokolov.repository.tag;
+package com.epam.esm.tag.repository;
 
 import com.epam.esm.sokolov.config.DatabaseTestConfig;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepository;
-import org.junit.jupiter.api.Assertions;
+import com.epam.esm.sokolov.repository.tag.TagRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,7 +39,9 @@ class TagRepositoryImplTest {
         giftCertificate.setDescription("5 any films");
         giftCertificate.setPrice(new BigDecimal(4));
         giftCertificate.setCreateDate(LocalDateTime.parse("2020-10-23T09:37:39"));
+        giftCertificate.setCreateDateTimeZone("+03:00");
         giftCertificate.setLastUpdateDate(LocalDateTime.parse("2020-10-23T15:37:39"));
+        giftCertificate.setLastUpdateDateTimeZone("+03:00");
         giftCertificate.setDuration(10);
         List<Tag> tags = new ArrayList<>();
         Tag films = new Tag("films");
@@ -49,8 +52,10 @@ class TagRepositoryImplTest {
         for (Tag tag : giftCertificate.getTags()) {
             tag.setId(tagRepository.create(tag));
         }
+
         giftCertificate.setId(giftCertificateRepository.create(giftCertificate));
         giftCertificateRepository.setGiftCertificatesToTags(giftCertificate);
+
         List crossTable = findAll("select * from tag_has_gift_certificate");
         System.out.println(crossTable);
         Assertions.assertEquals(10, crossTable.size());
