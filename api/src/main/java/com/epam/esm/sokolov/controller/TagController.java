@@ -28,8 +28,8 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("Gets the tag with specific id")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Tag.class)})
+//    @ApiOperation("Gets the tag with specific id")
+//    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Tag.class)})
     public Tag findById(@PathVariable Long id) {
         return tagService.findById(id);
     }

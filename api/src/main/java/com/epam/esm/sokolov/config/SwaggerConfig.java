@@ -1,7 +1,11 @@
 package com.epam.esm.sokolov.config;
 
+import com.epam.esm.sokolov.controller.GiftCertificateController;
+import com.epam.esm.sokolov.controller.TagController;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -12,8 +16,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-//@ComponentScan(basePackageClasses = TagController.class)
-//@PropertySource("classpath:swagger.properties")
+@ComponentScan(basePackageClasses = {TagController.class, GiftCertificateController.class})
+@PropertySource("classpath:swagger.properties")
 public class SwaggerConfig {
 
     private static final String SWAGGER_API_VERSION = "1.0";
@@ -34,10 +38,12 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-//                .pathMapping("/")
+                .pathMapping("/")
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.epam.esm.sokolov.controller"))
+                .paths(PathSelectors.ant("/api/**"))
                 .build();
+
     }
+
 }

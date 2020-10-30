@@ -3,13 +3,16 @@ package com.epam.esm.sokolov.controller;
 import com.epam.esm.sokolov.dto.GiftCertificateDTO;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.service.certificate.GiftCertificateService;
+import io.swagger.annotations.Api;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/gift_certificate")
+@RequestMapping("/api/gift_certificate")
+@Api(value = "GiftCertificateControllerApi", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GiftCertificateController {
 
     private GiftCertificateService giftCertificateService;
