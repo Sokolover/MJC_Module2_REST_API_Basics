@@ -1,6 +1,17 @@
 group 'com.epam.esm'
 version '1.0'
 
+apply plugin: 'war'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":api")
+    compile project(":core")
+}
+
 subprojects {
 
     apply plugin: 'java'
@@ -14,12 +25,18 @@ subprojects {
     sourceCompatibility = 1.8
 
     ext {
+        servletVersion = '4.0.1'
         springVersion = '5.2.9.RELEASE'
         jUnitVersion = '4.12'
         jupiterVersion = '5.7.0'
     }
 
+    test {
+        useJUnitPlatform()
+    }
+
     dependencies {
+        compile group: 'javax.servlet', name: 'javax.servlet-api', version: servletVersion
         compile group: 'org.springframework', name: 'spring-context', version: springVersion
         compile group: 'org.springframework', name: 'spring-webmvc', version: springVersion
         compile group: 'org.springframework', name: 'spring-jdbc', version: springVersion
