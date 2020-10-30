@@ -1,4 +1,4 @@
-package com.epam.esm.sokolov.core;
+package com.epam.esm.sokolov.service;
 
 import org.springframework.stereotype.Service;
 
