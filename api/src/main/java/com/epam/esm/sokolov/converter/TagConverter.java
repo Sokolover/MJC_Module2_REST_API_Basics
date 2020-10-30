@@ -6,15 +6,15 @@ import com.epam.esm.sokolov.model.Tag;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class TagConverter {
+public class TagConverter {
 
-    static List<TagDTO> convertTagsDtosFromTag(List<Tag> tags) {
+    public static List<TagDTO> convertTagsDtosFromTag(List<Tag> tags) {
         return tags.stream()
                 .map(TagDTO::new)
                 .collect(Collectors.toList());
     }
 
-    static List<Tag> convertTagsFromTagDtos(List<TagDTO> tagDTOs) {
+    public static List<Tag> convertTagsFromTagDtos(List<TagDTO> tagDTOs) {
         return tagDTOs.stream()
                 .map(tagDTO -> new Tag(tagDTO.getId(), tagDTO.getName()))
                 .collect(Collectors.toList());

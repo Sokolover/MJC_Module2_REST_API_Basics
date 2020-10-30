@@ -1,8 +1,6 @@
 package com.epam.esm.sokolov.config;
 
-import com.epam.esm.sokolov.controller.TagController;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;

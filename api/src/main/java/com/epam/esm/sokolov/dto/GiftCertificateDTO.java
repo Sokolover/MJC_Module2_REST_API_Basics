@@ -1,6 +1,8 @@
 package com.epam.esm.sokolov.dto;
 
+import com.epam.esm.sokolov.converter.CustomDateDeserializer;
 import com.epam.esm.sokolov.converter.CustomDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 
@@ -19,8 +21,8 @@ public class GiftCertificateDTO {
     private String name;
     private String description;
     private BigDecimal price;
-
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomDateDeserializer.class)
     private ZonedDateTime createDate;
     //      {
 //          id: 17,
@@ -32,7 +34,8 @@ public class GiftCertificateDTO {
 //          duration: 10,
 //          tags: [ ]
 //      }
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonSerialize(using = CustomDateSerializer.class)//todo выбрать сериалайзер
+    @JsonDeserialize(using = CustomDateDeserializer.class)
     private ZonedDateTime lastUpdateDate;
     private Integer duration;
 

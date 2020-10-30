@@ -17,15 +17,15 @@ final class GiftCertificateRepositoryConstants {
             "(name, description, price, createDate, createDateTimeZone, lastUpdateDate, lastUpdateDateTimeZone, duration) " +
             "values (:name, :description, :price, :createDate, :createDateTimeZone, :lastUpdateDate, :lastUpdateDateTimeZone, :duration)";
     static final String SELECT_BY_ID = "select * from gift_certificate where id = :id";
-//    static final String UPDATE = "update gift_certificate " +
+    //    static final String UPDATE = "update gift_certificate " +
 //            "set name = :name, description = :description, price = :price, createDate = :createDate, " +
 //            "createDateTimeZone = :createDateTimeZone, lastUpdateDate = :lastUpdateDate, " +
 //            "lastUpdateDateTimeZone = :lastUpdateDateTimeZone, duration = :duration " +
 //            "where id = :id";
     static final String DELETE = "delete from gift_certificate where id = :id";
     static final String DELETE_GIFT_CERTIFICATES_TO_TAGS = "delete from tag_has_gift_certificate where gift_certificate_id = :gift_certificate_id";
-        static final String SELECT_ALL = "select * from gift_certificate";
-//    static final String SELECT_ALL = "SELECT * " +
+    static final String SELECT_ALL = "select * from gift_certificate";
+    //    static final String SELECT_ALL = "SELECT * " +
 //            "FROM gift_certificate, " +
 //            "       tag_has_gift_certificate," +
 //            "       tag" +

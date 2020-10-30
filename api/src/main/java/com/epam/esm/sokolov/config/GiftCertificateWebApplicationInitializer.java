@@ -6,7 +6,7 @@ public class GiftCertificateWebApplicationInitializer extends AbstractAnnotation
 
     @Override
     protected Class[] getServletConfigClasses() {
-        return new Class[]{WebConfig.class};
+        return new Class[]{WebConfig.class, SwaggerConfig.class};
     }
 
     @Override

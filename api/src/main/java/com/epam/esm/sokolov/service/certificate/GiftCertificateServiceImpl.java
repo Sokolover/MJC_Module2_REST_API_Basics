@@ -66,7 +66,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public void update(GiftCertificateDTO giftCertificateDTO) {
 
-        if (giftCertificateDTO.getId() == null) {
+        if (isNull(giftCertificateDTO.getId())) {
             return;
         }
         GiftCertificate giftCertificate = giftCertificateConverter.convert(giftCertificateDTO);
