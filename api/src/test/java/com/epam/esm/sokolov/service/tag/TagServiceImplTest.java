@@ -1,4 +1,4 @@
-package com.epam.esm.sokolov.service;
+package com.epam.esm.sokolov.service.tag;
 
 import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.repository.tag.TagRepositoryImpl;
