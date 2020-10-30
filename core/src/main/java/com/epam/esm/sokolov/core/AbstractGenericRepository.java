@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -77,15 +76,10 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
     }
 
     public List<T> findAll(String query) {
-        List<T> list = jdbcTemplate.query(
+        return jdbcTemplate.query(
                 query,
                 this::mapEntity
         );
-        if (CollectionUtils.isEmpty(list)) {
-            throw new RepositoryException("List is empty", HttpStatus.NOT_FOUND, this.getClass());
-        } else {
-            return list;
-        }
     }
 
     protected MapSqlParameterSource createIdParamMap(Long id) {
