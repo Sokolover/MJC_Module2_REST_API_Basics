@@ -31,7 +31,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public Long create(GiftCertificateDTO giftCertificateDTO) {//todo improve createTags(giftCertificate);
+    public Long create(GiftCertificateDTO giftCertificateDTO) {
         GiftCertificate giftCertificate = giftCertificateConverter.convert(giftCertificateDTO);
         createTags(giftCertificate);
         Long newId = giftCertificateRepository.create(giftCertificate);
