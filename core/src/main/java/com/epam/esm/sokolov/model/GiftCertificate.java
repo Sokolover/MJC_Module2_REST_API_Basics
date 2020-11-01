@@ -24,6 +24,18 @@ public class GiftCertificate implements IdentifiedRow {
     public GiftCertificate() {
     }
 
+    public GiftCertificate(String name, String description, BigDecimal price, LocalDateTime createDate, String createDateTimeZone, LocalDateTime lastUpdateDate, String lastUpdateDateTimeZone, Integer duration, List<Tag> tags) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.createDate = createDate;
+        this.createDateTimeZone = createDateTimeZone;
+        this.lastUpdateDate = lastUpdateDate;
+        this.lastUpdateDateTimeZone = lastUpdateDateTimeZone;
+        this.duration = duration;
+        this.tags = tags;
+    }
+
     public GiftCertificate(Long id, String name, String description, BigDecimal price, LocalDateTime createDate, String createDateTimeZone, LocalDateTime lastUpdateDate, String lastUpdateDateTimeZone, Integer duration) {
         this.id = id;
         this.name = name;

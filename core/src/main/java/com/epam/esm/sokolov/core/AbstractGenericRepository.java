@@ -28,7 +28,7 @@ public abstract class AbstractGenericRepository<T extends IdentifiedRow> impleme
 
     public Long create(T entity, String createQuery, String updateQuery) {
         if (nonNull(entity.getId())) {
-            update(entity, updateQuery);//todo протестировать создание уже сущестующих сущностей, потому что тут было createQuery а не updateQuery
+            update(entity, updateQuery);
             return entity.getId();
         } else {
             KeyHolder keyHolder = new GeneratedKeyHolder();

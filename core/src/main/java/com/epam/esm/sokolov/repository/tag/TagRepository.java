@@ -21,6 +21,4 @@ public interface TagRepository {
     Tag findByName(Tag entity);
 
     List<Tag> findTagsByGiftCertificateId(long id);
-
-    void updateList(List<Tag> tags);
 }

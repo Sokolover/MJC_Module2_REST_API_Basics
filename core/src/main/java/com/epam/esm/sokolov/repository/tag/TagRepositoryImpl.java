@@ -66,11 +66,6 @@ public class TagRepositoryImpl extends AbstractGenericRepository<Tag> implements
     }
 
     @Override
-    public void updateList(List<Tag> tags) {
-        tags.forEach(this::update);
-    }
-
-    @Override
     public MapSqlParameterSource createAllParamMapWithoutId(Tag tag) {
         MapSqlParameterSource paramMap = new MapSqlParameterSource();
         paramMap.addValue(NAME, tag.getName());
