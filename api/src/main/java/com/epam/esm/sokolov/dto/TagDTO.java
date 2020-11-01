@@ -2,11 +2,6 @@ package com.epam.esm.sokolov.dto;
 
 import com.epam.esm.sokolov.model.Tag;
 
-/**
- * Created by.
- *
- * @author Galina Kutash.
- */
 public class TagDTO {
 
     private Long id;

@@ -5,12 +5,10 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-/**
- * Created by.
- *
- * @author Galina Kutash.
- */
 public class DateConverter {
+
+    private DateConverter() {
+    }
 
     public static LocalDateTime getLocalDate(ZonedDateTime createDate) {
         ZonedDateTime zonedDateTime = createDate.withZoneSameInstant(ZoneOffset.UTC);

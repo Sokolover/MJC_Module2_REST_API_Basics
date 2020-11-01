@@ -71,52 +71,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         GiftCertificate giftCertificate = giftCertificateConverter.convert(giftCertificateDTO);
 
-//        giftCertificate.getTags()
-//                .forEach(tagRepository::create);
-
-//        for (Tag tag : giftCertificate.getTags()) {
-//            Long id = tagRepository.create(tag);
-//            tag.setId(id);
-//        }
-
         giftCertificate.getTags().
                 forEach(tag -> tag.setId(tagRepository.create(tag)));
-
-//        List<Tag> tagsFromDatabase = tagRepository.findTagsByGiftCertificateId(giftCertificate.getId());
-//        setTags(giftCertificate, tagsFromDatabase);
-//        tagRepository.updateList(giftCertificate.getTags());
 
         resetGiftCertificatesToTagsLinks(giftCertificate);
         giftCertificateRepository.update(giftCertificate);
     }
-
-//    private void setTags(GiftCertificate giftCertificate, List<Tag> tagsFromDatabase) {
-//        List<Tag> tags = giftCertificate.getTags();
-//        if (isNull(tags)) {
-//            giftCertificate.setTags(tagsFromDatabase);
-//        } else {
-//            updateTags(tags);
-//        }
-//    }
-//
-//    private void updateTags(List<Tag> tags) {
-//        for (Tag tag : tags) {
-//            Tag findByNameTag = tagRepository.findByName(tag);
-//            if (isNull(findByNameTag.getId())) {
-//                createNewTag(tag);
-//            } else {
-//                updateTag(tag, findByNameTag);
-//            }
-//        }
-//    }
-//
-//    private void updateTag(Tag tag, Tag findByNameTag) {
-//        if (findByNameTag.getId().equals(tag.getId())) {
-//            tagRepository.update(tag);
-//        } else {
-//            tag.setId(findByNameTag.getId());
-//        }
-//    }
 
     private void createNewTag(Tag tag) {
         Long newId = tagRepository.create(tag);

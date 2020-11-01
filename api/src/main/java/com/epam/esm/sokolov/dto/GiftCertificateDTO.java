@@ -1,7 +1,6 @@
 package com.epam.esm.sokolov.dto;
 
 import com.epam.esm.sokolov.converter.CustomDateDeserializer;
-import com.epam.esm.sokolov.converter.CustomDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
@@ -10,11 +9,6 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-/**
- * Created by.
- *
- * @author Galina Kutash.
- */
 public class GiftCertificateDTO {
 
     private Long id;

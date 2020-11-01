@@ -1,7 +1,6 @@
 package com.epam.esm.sokolov.controller;
 
 import com.epam.esm.sokolov.dto.GiftCertificateDTO;
-import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.service.certificate.GiftCertificateService;
 import io.swagger.annotations.Api;
 import org.springframework.http.MediaType;

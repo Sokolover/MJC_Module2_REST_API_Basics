@@ -12,11 +12,6 @@ import static com.epam.esm.sokolov.converter.TagConverter.convertTagsDtosFromTag
 import static com.epam.esm.sokolov.converter.TagConverter.convertTagsFromTagDtos;
 import static java.util.Objects.nonNull;
 
-/**
- * Created by.
- *
- * @author Galina Kutash.
- */
 @Service
 public class GiftCertificateConverter {
 

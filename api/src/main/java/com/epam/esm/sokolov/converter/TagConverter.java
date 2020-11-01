@@ -8,14 +8,18 @@ import java.util.stream.Collectors;
 
 public class TagConverter {
 
+    private TagConverter() {
+
+    }
+
     public static List<TagDTO> convertTagsDtosFromTag(List<Tag> tags) {
         return tags.stream()
                 .map(TagDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public static List<Tag> convertTagsFromTagDtos(List<TagDTO> tagDTOs) {
-        return tagDTOs.stream()
+    static List<Tag> convertTagsFromTagDtos(List<TagDTO> tagDTOS) {
+        return tagDTOS.stream()
                 .map(tagDTO -> new Tag(tagDTO.getId(), tagDTO.getName()))
                 .collect(Collectors.toList());
     }
