@@ -1,0 +1,15 @@
+ext {
+    mySqlVersion = '8.0.21'
+    h2databaseVersion = '1.4.200'
+    jacksonVersion = '2.11.3'
+    dbcpVersion = '2.8.0'
+}
+
+dependencies {
+    compile group: 'mysql', name: 'mysql-connector-java', version: mySqlVersion
+    testCompile group: 'com.h2database', name: 'h2', version: h2databaseVersion
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: dbcpVersion
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
+}
