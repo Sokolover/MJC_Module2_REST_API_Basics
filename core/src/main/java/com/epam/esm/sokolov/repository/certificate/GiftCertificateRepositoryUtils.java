@@ -1,7 +1,6 @@
 package com.epam.esm.sokolov.repository.certificate;
 
 import com.epam.esm.sokolov.model.GiftCertificate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,7 +18,6 @@ class GiftCertificateRepositoryUtils {
     private static final String SORT_BY = "sortBy";
     private static final String SORT_DIRECTION = "sortDirection";
     private static final String TAG_NAME = "tagName";
-
     private static final String BASE_QUERY = "select gift_certificate.*\n" +
             "from tag,\n" +
             "     tag_has_gift_certificate,\n" +
@@ -27,8 +25,9 @@ class GiftCertificateRepositoryUtils {
             "where\n" +
             "   tag.id = tag_has_gift_certificate.tag_id\n" +
             "   and gift_certificate.id = tag_has_gift_certificate.gift_certificate_id\n";
-    private StringBuilder resultQuery = new StringBuilder(BASE_QUERY);
-    private MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+    private GiftCertificateRepositoryUtils() {
+
+    }
 
     /**
      * This part of query add a condition to order GiftCertificates from database
@@ -51,19 +50,16 @@ class GiftCertificateRepositoryUtils {
      * This part of query add a condition to select GiftCertificates from database
      * by a part of a GiftCertificates field (for example name or description)
      *
-     * @param paramMap              Map of parameters from request
-     * @param resultQuery           Main query to witch will be appended a new part of query
-     * @param mapSqlParameterSource Map with named params for NamedParameterJdbcTemplate operations
+     * @param paramMap    Map of parameters from request
+     * @param resultQuery Main query to witch will be appended a new part of query
      */
-    private static void findByPartOfQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
+    private static void findByPartOfQueryPart(Map<String, String> paramMap, StringBuilder resultQuery) {
         String partOf = paramMap.get(PART_OF);
         String partValue = paramMap.get(PART_VALUE);
         if (nonNull(partOf) && nonNull(partValue)) {
             resultQuery.append(
-                    format("    and gift_certificate.%s like :partValue%n", partOf)
+                    format("    and gift_certificate.%s like \'%%%s%%\'%n", partOf, partValue)
             );
-            //format("%%%s%%", partValue) <==> "%" + partValue + "%"
-            mapSqlParameterSource.addValue(PART_VALUE, format("%%%s%%", partValue));
         }
     }
 
@@ -71,15 +67,15 @@ class GiftCertificateRepositoryUtils {
      * This part of query add a condition to select GiftCertificates from database
      * by one tag name
      *
-     * @param paramMap              Map of parameters from request
-     * @param resultQuery           Main query to witch will be appended a new part of query
-     * @param mapSqlParameterSource Map with named params for NamedParameterJdbcTemplate operations
+     * @param paramMap    Map of parameters from request
+     * @param resultQuery Main query to witch will be appended a new part of query
      */
-    private static void findByTagNameQueryPart(Map<String, String> paramMap, StringBuilder resultQuery, MapSqlParameterSource mapSqlParameterSource) {
+    private static void findByTagNameQueryPart(Map<String, String> paramMap, StringBuilder resultQuery) {
         String tagName = paramMap.get(TAG_NAME);
         if (nonNull(tagName)) {
-            resultQuery.append("    and tag.name like :tagName\n");
-            mapSqlParameterSource.addValue(TAG_NAME, tagName);
+            resultQuery.append(
+                    format("    and tag.name like \'%s\'%n", tagName)
+            );
         }
     }
 
@@ -134,15 +130,11 @@ class GiftCertificateRepositoryUtils {
      * @param paramMap Map of parameters from request
      * @return Generated query based on parameters from request
      */
-    String buildFindAllByParamQuery(Map<String, String> paramMap) {
-        findByTagNameQueryPart(paramMap, resultQuery, mapSqlParameterSource);
-        findByPartOfQueryPart(paramMap, resultQuery, mapSqlParameterSource);
+    static String buildFindAllByParamQuery(Map<String, String> paramMap) {
+        StringBuilder resultQuery = new StringBuilder(BASE_QUERY);
+        findByTagNameQueryPart(paramMap, resultQuery);
+        findByPartOfQueryPart(paramMap, resultQuery);
         sortByQueryPart(paramMap, resultQuery);
-        resultQuery.append(";");
-        return resultQuery.toString();
-    }
-
-    MapSqlParameterSource getMapSqlParameterSource() {
-        return mapSqlParameterSource;
+        return resultQuery.append(";").toString();
     }
 }

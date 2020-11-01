@@ -65,12 +65,9 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
 
     @Override
     public List<GiftCertificate> findAllByParams(Map<String, String> paramMap) {
-        GiftCertificateRepositoryUtils giftCertificateRepositoryUtils = new GiftCertificateRepositoryUtils();
-        String resultQuery = giftCertificateRepositoryUtils.buildFindAllByParamQuery(paramMap);
-        MapSqlParameterSource mapSqlParameterSource = giftCertificateRepositoryUtils.getMapSqlParameterSource();
+        String resultQuery = GiftCertificateRepositoryUtils.buildFindAllByParamQuery(paramMap);
         return jdbcTemplate.query(
                 resultQuery,
-                mapSqlParameterSource,
                 this::mapEntity
         );
     }
