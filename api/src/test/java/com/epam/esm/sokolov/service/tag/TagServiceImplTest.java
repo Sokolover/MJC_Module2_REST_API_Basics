@@ -2,7 +2,6 @@ package com.epam.esm.sokolov.service.tag;
 
 import com.epam.esm.sokolov.model.Tag;
 import com.epam.esm.sokolov.repository.tag.TagRepositoryImpl;
-import com.epam.esm.sokolov.service.tag.TagServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +12,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 @RunWith(MockitoJUnitRunner.class)
 class TagServiceImplTest {
@@ -20,15 +23,32 @@ class TagServiceImplTest {
     @InjectMocks
     TagServiceImpl tagServiceImpl;
     @Mock
-    TagRepositoryImpl tagRepoImpl;
+    TagRepositoryImpl tagRepositoryImpl;
 
     @Test
-    public void shouldSaveAndReadSameValue() {
+    void shouldFindById() {
+        Tag tagFromRepository = new Tag(1L, "first");
+        Mockito.when(tagRepositoryImpl.findById(1L)).thenReturn(tagFromRepository);
+        Tag tagFromService = tagServiceImpl.findById(1L);
+        Assertions.assertEquals(tagFromRepository, tagFromService);
+    }
 
-        Tag tagRepo = new Tag(1L, "1-st");
-        Mockito.when(tagRepoImpl.findById(1L)).thenReturn(tagRepo);
+    @Test
+    void shouldFindAll() {
+        List<Tag> tagsFromRepository = new ArrayList<>();
+        tagsFromRepository.add(new Tag(1L, "first"));
+        tagsFromRepository.add(new Tag(2L, "second"));
+        tagsFromRepository.add(new Tag(3L, "third"));
+        Mockito.when(tagRepositoryImpl.findAll()).thenReturn(tagsFromRepository);
+        List<Tag> tagsFromService = tagServiceImpl.findAll();
+        Assertions.assertEquals(tagsFromRepository, tagsFromService);
+    }
 
-        Tag tagService = tagServiceImpl.findById(1L);
-        Assertions.assertEquals(tagRepo, tagService);
+    @Test
+    void shouldCreate(){
+        Tag newTag = new Tag(1L, "first");
+        Mockito.when(tagRepositoryImpl.create(newTag)).thenReturn(newTag.getId());
+        Long tagIdFromServiceCreate = tagServiceImpl.create(newTag);
+        Assertions.assertEquals(newTag.getId(), tagIdFromServiceCreate);
     }
 }

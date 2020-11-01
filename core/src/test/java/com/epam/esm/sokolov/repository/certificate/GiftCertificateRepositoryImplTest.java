@@ -1,12 +1,11 @@
-package com.epam.esm.tag.repository;
+package com.epam.esm.sokolov.repository.certificate;
 
 import com.epam.esm.sokolov.config.DatabaseTestConfig;
 import com.epam.esm.sokolov.model.GiftCertificate;
 import com.epam.esm.sokolov.model.Tag;
-import com.epam.esm.sokolov.repository.certificate.GiftCertificateRepository;
 import com.epam.esm.sokolov.repository.tag.TagRepository;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,7 +22,7 @@ import java.util.Map;
 
 @SpringJUnitConfig(classes = {DatabaseTestConfig.class})
 @ActiveProfiles("test")
-class TagRepositoryImplTest {
+public class GiftCertificateRepositoryImplTest {
 
     @Autowired
     private TagRepository tagRepository;
@@ -49,21 +48,18 @@ class TagRepositoryImplTest {
         Tag fun = new Tag("fun");
         tags.add(fun);
         giftCertificate.setTags(tags);
-        for (Tag tag : giftCertificate.getTags()) {
-            tag.setId(tagRepository.create(tag));
-        }
+        giftCertificate.getTags().forEach(tag -> tag.setId(tagRepository.create(tag)));
 
         giftCertificate.setId(giftCertificateRepository.create(giftCertificate));
         giftCertificateRepository.setGiftCertificatesToTags(giftCertificate);
 
-        List crossTable = findAll("select * from tag_has_gift_certificate");
-        System.out.println(crossTable);
+        List crossTable = findAll();
         Assertions.assertEquals(10, crossTable.size());
     }
 
-    List findAll(String query) {
+    List findAll() {
         return jdbcTemplate.query(
-                query, this::mapEntity
+                "select * from tag_has_gift_certificate", this::mapEntity
         );
     }
 
@@ -77,33 +73,34 @@ class TagRepositoryImplTest {
     @Test
     void shouldFindAll() {
         List<Tag> list = tagRepository.findAll();
-        for (Tag tag : list) {
-            System.out.println(tag.getName());
-        }
         Assertions.assertEquals(5, list.size());
     }
 
     @Test
     void shouldFindById() {
-        Tag testTag = new Tag(1L, "first");
-        Tag tag = tagRepository.findById(1);
-        Assertions.assertEquals(testTag, tag);
-    }
-
-    @Test
-    void shouldCreate() {
-        Tag testTag = new Tag("fourth");
-        Long newTagId = tagRepository.create(testTag);
-        testTag.setId(newTagId);
-        Assertions.assertEquals(testTag, tagRepository.findById(newTagId));
+        GiftCertificate giftCertificateFromDatabase = giftCertificateRepository.findById(15L);
+        GiftCertificate giftCertificate = getGiftCertificate();
+        Assertions.assertEquals(giftCertificate, giftCertificateFromDatabase);
     }
 
     @Test
     void shouldDelete() {
-        List<Tag> repoBeforeDelete = tagRepository.findAll();
-        System.out.println(repoBeforeDelete);
-        Tag testTag = new Tag(3L, "third");
-        tagRepository.delete(testTag);
-        Assertions.assertEquals(repoBeforeDelete.size() - 1, tagRepository.findAll().size());
+        List<GiftCertificate> giftCertificateRepositoryBeforeDelete = giftCertificateRepository.findAll();
+        GiftCertificate giftCertificateToDelete = getGiftCertificate();
+        giftCertificateRepository.delete(giftCertificateToDelete);
+        List<GiftCertificate> giftCertificateRepositoryAfterDelete = giftCertificateRepository.findAll();
+        Assertions.assertEquals(giftCertificateRepositoryBeforeDelete.size() - 1, giftCertificateRepositoryAfterDelete.size());
+    }
+
+    private GiftCertificate getGiftCertificate() {
+        return new GiftCertificate(15L,
+                "netflix",
+                "5 any films",
+                new BigDecimal("5.55"),
+                LocalDateTime.parse("2020-10-23T09:37:39.000"),
+                "+03:00",
+                LocalDateTime.parse("2020-10-23T14:37:39.000"),
+                "+03:00",
+                10);
     }
 }
