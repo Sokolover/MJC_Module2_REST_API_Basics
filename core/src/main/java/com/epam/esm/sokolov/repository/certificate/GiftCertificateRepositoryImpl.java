@@ -45,15 +45,15 @@ public class GiftCertificateRepositoryImpl extends AbstractGenericRepository<Gif
     @Override
     public void setGiftCertificatesToTags(GiftCertificate giftCertificate) {
         List<Tag> tags = giftCertificate.getTags();
-        if(CollectionUtils.isEmpty(tags)){
+        if (CollectionUtils.isEmpty(tags)) {
             return;
         }
         MapSqlParameterSource paramMap = new MapSqlParameterSource();
-        for (Tag tag : tags) {
+        tags.forEach(tag -> {
             paramMap.addValue(TAG_ID, tag.getId());
             paramMap.addValue(GIFT_CERTIFICATE_ID, giftCertificate.getId());
             jdbcTemplate.update(INSERT_TAG_TO_GIFT_CERTIFICATE, paramMap);
-        }
+        });
     }
 
     @Override

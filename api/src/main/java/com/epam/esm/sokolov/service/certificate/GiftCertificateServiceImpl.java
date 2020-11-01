@@ -45,14 +45,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (CollectionUtils.isEmpty(tags)) {
             return;
         }
-        for (Tag tag : tags) {
+        tags.forEach(tag -> {
             Tag tagFromDb = tagRepository.findByName(tag);
             if (isNull(tagFromDb.getId())) {
                 createNewTag(tag);
             } else {
                 tag.setId(tagFromDb.getId());
             }
-        }
+        });
     }
 
     @Override
@@ -109,10 +109,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private void setTagsToGiftCertificates(List<GiftCertificate> giftCertificates) {
-        for (GiftCertificate giftCertificate : giftCertificates) {
+        giftCertificates.forEach(giftCertificate -> {
             List<Tag> tags = tagRepository.findTagsByGiftCertificateId(giftCertificate.getId());
             giftCertificate.setTags(tags);
-        }
+        });
     }
 
     @Override
