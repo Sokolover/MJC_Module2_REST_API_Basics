@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource("classpath:jdbc.properties")
 @ComponentScan("com.epam.esm.sokolov")
-public class DatabaseTestConfig {
+public class DatabaseTestConfig { //todo вынести этот конфиг в тестовую папку
     @Profile("test")
     @Bean
     public DataSource dataSource() {

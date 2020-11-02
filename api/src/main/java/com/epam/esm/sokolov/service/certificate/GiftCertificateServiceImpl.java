@@ -30,7 +30,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    @Transactional
+    @Transactional//todo посмотреть как аннотация ведёт себя с checked unchecked exception
     public Long create(GiftCertificateDTO giftCertificateDTO) {
         GiftCertificate giftCertificate = giftCertificateConverter.convert(giftCertificateDTO);
         createTags(giftCertificate);
@@ -65,7 +65,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void update(GiftCertificateDTO giftCertificateDTO) {
-
+//todo isNull в основном используется в стримах
         if (isNull(giftCertificateDTO.getId())) {
             return;
         }

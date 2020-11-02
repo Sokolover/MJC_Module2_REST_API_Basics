@@ -44,7 +44,7 @@ public class GiftCertificateController {
     public void update(@RequestBody GiftCertificateDTO giftCertificate) {
         giftCertificateService.update(giftCertificate);
     }
-
+//todo логгеры и возвращать что-то в update create
     @DeleteMapping("/delete")
     public void delete(@RequestBody GiftCertificateDTO giftCertificate) {
         giftCertificateService.delete(giftCertificate);

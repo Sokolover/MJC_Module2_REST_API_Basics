@@ -37,7 +37,7 @@ class GiftCertificateServiceImplTest {
     @Spy
     private GiftCertificateConverter giftCertificateConverter;
 
-    @Test
+    @Test//todo посмотреть бест практис по названию тестов
     void shouldCreate() {
         GiftCertificateDTO giftCertificateToCreate = getGiftCertificateDTOToCreate();
         Mockito.doReturn(1L).when(giftCertificateRepositoryImpl).create(getGiftCertificateToCreate());

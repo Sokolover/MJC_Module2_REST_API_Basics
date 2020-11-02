@@ -62,6 +62,7 @@ public class GiftCertificateRepositoryImplTest {
                 "select * from tag_has_gift_certificate", this::mapEntity
         );
     }
+//todo чтобы проверять test coverage jacoco plaguing
 
     Map<Long, Long> mapEntity(ResultSet resultSet, int row) throws SQLException {
         Map<Long, Long> map = new HashMap<>();
@@ -69,6 +70,40 @@ public class GiftCertificateRepositoryImplTest {
                 resultSet.getLong("gift_certificate_id"));
         return map;
     }
+
+    /*
+    todo review of theory on demo
+
+       почитать принципы REST
+
+       посмотреть
+        - bean definition,
+        - spring application context (это map которая хранит инфу по созданию бинов),
+        - factory bean и bean factory (разные вещи)
+
+        Динеш Раджпут Spring все паттерны программирования
+
+        инжекция прототайп бина в синглтон бин
+        (прототайп не пересоздаётся)
+        решается:
+        лукап, провайдер, апп контекст
+
+        репоситорий и сервис аннотации отличаются тем что репозитори может обрабатывать ошибки из jdbc template
+        разница в обработке ошибок
+
+        по умолчанию бины называются как типы класса только с маленькой буквы
+
+        треугольник тестирования почитать (почему нельзя пистаь только апи тесты)
+
+        юнит тесты используются для тестирования любого уровня и чтобы проверить маленькую часть кода
+
+        почитать про юнит и интеграционный тесты - TDD (понять зачем юнит тесты) BDD
+
+        optional нужен для стримов а не только для проверок на null. суть - возвращать значения, а не передавать куда-то
+
+        прочитать про параллельные стримы когда их использовать
+
+     */
 
     @Test
     void shouldFindAll() {

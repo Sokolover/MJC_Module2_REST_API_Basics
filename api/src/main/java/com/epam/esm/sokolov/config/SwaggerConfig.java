@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @ComponentScan(basePackageClasses = {TagController.class, GiftCertificateController.class})
-@PropertySource("classpath:swagger.properties")
+//@PropertySource("classpath:swagger.properties")
 public class SwaggerConfig {
 
     private static final String SWAGGER_API_VERSION = "1.0";
